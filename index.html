@@ -1,1068 +1,604 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="ESPECTROLAB — Projeto Integrador sobre dispersão da luz por meio da refração: um espectroscópio educacional, automatizado e acessível. Óptica, robótica e inclusão.">
-<title>ESPECTROLAB · Dispersão da Luz por Refração — Projeto Integrador</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Projeto Integrador CEP 3TRI: Site educacional, interativo e 100% acessível sobre aquecimento sustentável de piscinas, sensores de temperatura e física das ondas.">
+  <title>Projeto Integrador CEP | Aquecimento Sustentável & Sensoriamento</title>
+  
+  <!-- Fontes: Inter (Leitura) e Space Mono (Dados/Técnico) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================================
+       1. DESIGN SYSTEM & VARIÁVEIS (Identidade "Sol + Água")
+       ========================================================= */
+    :root {
+      --sol-primario: #FF8C42;
+      --sol-secundario: #FFD166;
+      --agua-primaria: #00B4D8;
+      --agua-secundaria: #0077B6;
+      --fundo: #F8F9FA;
+      --superficie: #FFFFFF;
+      --texto: #1A1A1A;
+      --texto-suave: #4A4A4A;
+      --borda: #D1D5DB;
+      --sucesso: #10B981;
+      --erro: #EF4444;
+      
+      --fonte-principal: 'Inter', sans-serif;
+      --fonte-dados: 'Space Mono', monospace;
+      
+      --espacamento: 1.5rem;
+      --raio-borda: 12px;
+    }
 
-<style>
-/* ============ DESIGN SYSTEM — EDITORIAL BRUTALISTA CLARO ============ */
-:root{
-  --bg:#f4f1ea; --bg2:#eae6da; --surface:#fffdf8; --ink:#131313; --muted:#625e54;
-  --line:#cfcabc; --accent:#00c2e0; --accent2:#ff3366; --accent3:#c8f31d;
-  --red:#d92d3d; --orange:#e86f13; --yellow:#c99700; --green:#148f5f;
-  --cyan:#0092b8; --blue:#3351d8; --violet:#6a0dad;
-  --spectrum:linear-gradient(90deg,var(--red),var(--orange),var(--yellow),var(--green),var(--cyan),var(--blue),var(--violet));
-  --disp:'Syne',sans-serif; --body:'Space Grotesk',sans-serif; --mono:'JetBrains Mono',monospace;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:1.5rem}
-body{
-  background:var(--bg);
-  background-image:linear-gradient(rgba(19,19,19,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(19,19,19,.045) 1px,transparent 1px);
-  background-size:44px 44px;
-  color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.65;overflow-x:hidden;padding-left:84px;
-}
-::selection{background:var(--accent3);color:#131313}
-:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
-img{max-width:100%;display:block}
-a{color:inherit}
-button{font-family:inherit}
+    /* Modos de Acessibilidade */
+    body.alto-contraste {
+      --fundo: #000000;
+      --superficie: #111111;
+      --texto: #FFFFFF;
+      --texto-suave: #FFFF00;
+      --borda: #FFFFFF;
+      --sol-primario: #FFFF00;
+      --agua-primaria: #00FFFF;
+    }
 
-.skip{position:absolute;left:-999px;top:.6rem;z-index:300;background:var(--accent3);color:#131;padding:.7rem 1.2rem;border:3px solid var(--ink);font-weight:700}
-.skip:focus{left:.6rem}
-.wrap{width:min(1200px,92%);margin-inline:auto}
-section{padding:clamp(4.5rem,9vw,7.5rem) 0;position:relative;border-top:3px solid var(--ink)}
+    body.fonte-dislexia {
+      --fonte-principal: 'Comic Sans MS', 'OpenDyslexic', sans-serif !important;
+      line-height: 1.8 !important;
+      letter-spacing: 0.05em !important;
+      word-spacing: 0.1em !important;
+    }
 
-/* números-fantasma de seção */
-.ghost{position:absolute;top:.5rem;right:0;font-family:var(--disp);font-weight:800;font-size:clamp(7rem,20vw,15rem);line-height:1;color:transparent;-webkit-text-stroke:2px rgba(19,19,19,.07);pointer-events:none;user-select:none;z-index:0}
-.ghost.gl{right:auto;left:0}
-section>.wrap{position:relative;z-index:1}
+    /* =========================================================
+       2. RESET & BASE (Mobile-First)
+       ========================================================= */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: var(--fonte-principal);
+      background-color: var(--fundo);
+      color: var(--texto);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+    }
 
-/* ============ TIPOGRAFIA ============ */
-.kick{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.7rem;margin-bottom:1.4rem;font-weight:600}
-.kick b{background:var(--ink);color:var(--bg);padding:.2rem .55rem;letter-spacing:.1em}
-.h2{font-family:var(--disp);font-weight:800;font-size:clamp(2rem,5vw,3.6rem);line-height:1;text-transform:uppercase;letter-spacing:-.02em;margin-bottom:1.3rem}
-.lead{color:var(--muted);font-size:clamp(1rem,1.4vw,1.18rem);max-width:62ch;font-weight:500}
-.lead strong{color:var(--ink)}
-.mono{font-family:var(--mono)}
-.lm{overflow:hidden}
-.lm>span{display:block;transform:translateY(112%);transition:transform 1s cubic-bezier(.16,1,.3,1)}
-.lm.in>span{transform:none}
-.rv{opacity:0;transform:translateY(36px);transition:opacity .6s ease,transform .8s cubic-bezier(.16,1,.3,1);transition-delay:var(--d,0s)}
-.rv.in{opacity:1;transform:none}
+    /* Acessibilidade: Foco visível para navegação por teclado */
+    *:focus-visible {
+      outline: 3px solid var(--sol-primario);
+      outline-offset: 3px;
+    }
 
-/* ============ NAV LATERAL (DESKTOP) ============ */
-.snav{position:fixed;left:0;top:0;bottom:0;width:84px;background:var(--ink);z-index:150;display:flex;flex-direction:column;align-items:stretch;border-right:4px solid var(--accent3)}
-.snav .mark{padding:1.2rem 0;display:flex;justify-content:center;border-bottom:2px solid #2c2c2c}
-.snav .mark svg{width:34px;height:34px}
-.snav ul{list-style:none;flex:1;display:flex;flex-direction:column;justify-content:center}
-.snav a{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--mono);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:#8b8b8b;text-decoration:none;padding:1rem .4rem;text-align:center;transition:.25s;border-left:3px solid transparent}
-.snav a:hover,.snav a[aria-current="true"]{color:var(--accent3);background:#1e1e1e;border-left-color:var(--accent3)}
-#progV{position:absolute;left:0;bottom:0;width:6px;height:0;background:var(--spectrum);transition:height .15s linear}
+    /* Link para pular conteúdo (A11y) */
+    .skip-link {
+      position: absolute; top: -40px; left: 0; background: var(--sol-primario);
+      color: #000; padding: 8px; z-index: 100; transition: top 0.3s; font-weight: bold;
+    }
+    .skip-link:focus { top: 0; }
 
-/* nav topo (mobile) */
-.tnav{display:none;position:sticky;top:0;z-index:150;background:var(--ink);color:var(--bg);align-items:center;justify-content:space-between;padding:.75rem 1rem;border-bottom:4px solid var(--accent3)}
-.tnav .tb{font-family:var(--disp);font-weight:800;letter-spacing:-.02em;font-size:1.05rem;color:#fff}
-.burger{background:none;border:2px solid #444;border-radius:0;width:44px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer}
-.burger span{width:20px;height:2px;background:var(--accent3)}
-#progT{position:absolute;left:0;bottom:-4px;height:4px;width:0;background:var(--spectrum)}
-.mnav{position:fixed;inset:0;z-index:200;background:var(--ink);display:flex;flex-direction:column;justify-content:center;padding:2rem 8%;gap:.2rem;transform:translateX(-100%);transition:transform .5s cubic-bezier(.7,0,.2,1)}
-body.nav-open .mnav{transform:none}
-body.nav-open{overflow:hidden}
-.mnav a{font-family:var(--disp);font-weight:800;font-size:clamp(1.4rem,6vw,2.1rem);text-transform:uppercase;color:#fff;text-decoration:none;padding:.55rem 0;border-bottom:1px solid #2c2c2c;display:flex;justify-content:space-between}
-.mnav a small{font-family:var(--mono);font-size:.7rem;color:var(--accent3);align-self:center}
-.mnav a:hover{color:var(--accent3)}
-.mclose{position:absolute;top:1rem;right:1.2rem;background:none;border:2px solid #444;color:#fff;width:46px;height:46px;font-size:1.15rem;cursor:pointer}
+    /* =========================================================
+       3. COMPONENTES DE UI
+       ========================================================= */
+    .container { width: min(1200px, 90%); margin: 0 auto; padding: var(--espacamento) 0; }
+    
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.8rem 1.5rem; border-radius: var(--raio-borda); font-weight: 600;
+      text-decoration: none; cursor: pointer; border: 2px solid transparent;
+      transition: transform 0.2s, box-shadow 0.2s; font-size: 1rem;
+    }
+    .btn-primario { background: var(--agua-primaria); color: white; }
+    .btn-primario:hover { background: var(--agua-secundaria); transform: translateY(-2px); }
+    
+    .card {
+      background: var(--superficie); border: 2px solid var(--borda);
+      border-radius: var(--raio-borda); padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
 
-/* ============ HERO PÔSTER ============ */
-.hero{padding:clamp(4rem,8vw,7rem) 0 4rem;position:relative}
-.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,4vw,4rem);align-items:center}
-.hero-title{font-family:var(--disp);font-weight:800;text-transform:uppercase;line-height:.92;letter-spacing:-.03em;font-size:clamp(2.7rem,6.6vw,5.8rem);margin:1.2rem 0 1.6rem}
-.hero-title .t1{display:block}
-.hero-title .t2{display:block;margin-left:9%;color:transparent;-webkit-text-stroke:2.5px var(--ink)}
-.hero-title .t3{display:block;margin-left:3%}
-.spec-bar{height:.28em;background:var(--spectrum);margin-top:.18em;transform-origin:left;animation:grow 1.2s cubic-bezier(.16,1,.3,1) .4s both}
-@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.hero-sub{max-width:52ch;color:var(--muted);font-size:clamp(1rem,1.4vw,1.2rem);font-weight:500}
-.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem}
-.stamps{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.2rem}
-.stamp{font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;border:2px solid var(--ink);background:var(--surface);padding:.5rem .85rem;box-shadow:3px 3px 0 var(--ink);transform:rotate(var(--r,0deg));font-weight:600}
-.stamp.y{background:var(--accent3)} .stamp.c{background:var(--accent)}
-.figure-card{background:var(--surface);border:3px solid var(--ink);box-shadow:10px 10px 0 var(--ink)}
-.figure-card .cap{border-top:3px solid var(--ink);padding:.7rem 1rem;font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;display:flex;justify-content:space-between;gap:1rem;color:var(--muted)}
-#prism{width:100%;height:440px;display:block;cursor:crosshair}
-.scroll-hint{margin-top:3rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.6rem}
-.scroll-hint::after{content:"↓";animation:hop 1.6s ease-in-out infinite;font-size:1rem}
-@keyframes hop{50%{transform:translateY(6px)}}
+    .tag {
+      display: inline-block; background: var(--sol-secundario); color: #000;
+      padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem;
+      font-family: var(--fonte-dados); font-weight: 700; text-transform: uppercase;
+    }
 
-/* faixa marquee */
-.band{background:var(--ink);color:var(--bg);overflow:hidden;border-top:3px solid var(--ink)}
-.tk-track{display:flex;gap:3rem;width:max-content;padding:.9rem 0;animation:tk 32s linear infinite}
-.tk-track span{font-family:var(--mono);font-size:.74rem;letter-spacing:.22em;white-space:nowrap;display:flex;align-items:center;gap:.6rem}
-.tk-track i{width:12px;height:12px;display:inline-block;background:var(--c)}
-@keyframes tk{to{transform:translateX(-50%)}}
+    h1, h2, h3 { line-height: 1.2; margin-bottom: 1rem; }
+    h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; }
+    h2 { font-size: clamp(1.5rem, 4vw, 2.5rem); color: var(--agua-secundaria); }
+    .body-alto-contraste h2 { color: var(--sol-primario); }
 
-/* ============ COMPONENTES BRUTALISTAS ============ */
-.btn{display:inline-flex;align-items:center;gap:.6rem;border:3px solid var(--ink);background:var(--surface);color:var(--ink);padding:.85rem 1.4rem;font-family:var(--disp);font-weight:700;font-size:.92rem;text-transform:uppercase;letter-spacing:.03em;text-decoration:none;box-shadow:5px 5px 0 var(--ink);cursor:pointer;transition:transform .18s,box-shadow .18s}
-.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
-.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
-.btn-pr{background:var(--accent)}
-.btn-y{background:var(--accent3)}
+    /* =========================================================
+       4. HEADER & NAVEGAÇÃO
+       ========================================================= */
+    header {
+      background: var(--superficie); border-bottom: 3px solid var(--borda);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .nav-container {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      padding: 1rem 0; gap: 1rem;
+    }
+    .logo { font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; }
+    .logo span { color: var(--sol-primario); }
+    
+    nav ul { display: flex; gap: 1.5rem; list-style: none; flex-wrap: wrap; }
+    nav a { text-decoration: none; color: var(--texto); font-weight: 600; font-size: 0.95rem; }
+    nav a:hover, nav a[aria-current="page"] { color: var(--agua-primaria); text-decoration: underline; }
 
-.panel{background:var(--surface);border:3px solid var(--ink);box-shadow:8px 8px 0 var(--ink)}
-.panel-bar{display:flex;align-items:center;gap:.5rem;padding:.7rem 1rem;border-bottom:3px solid var(--ink);background:var(--bg2)}
-.panel-bar i{width:12px;height:12px;border:2px solid var(--ink);display:block;background:var(--c,#fff)}
-.panel-bar .t{margin-left:.5rem;font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600}
-.panel canvas{width:100%;display:block}
-.panel-ctrl{display:flex;flex-wrap:wrap;gap:1.1rem 2rem;align-items:center;padding:1.1rem;border-top:3px solid var(--ink);background:var(--surface)}
-.ctrl{display:flex;flex-direction:column;gap:.45rem}
-.ctrl label{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:var(--muted)}
-input[type=range]{accent-color:var(--accent2);width:190px;cursor:pointer}
-.seg{display:flex;gap:.5rem;flex-wrap:wrap}
-.seg button{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;padding:.5rem .8rem;border:2px solid var(--ink);background:var(--surface);box-shadow:3px 3px 0 var(--ink);cursor:pointer;transition:.15s;font-weight:600}
-.seg button:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--accent3)}
-.readout{display:flex;gap:1.6rem;flex-wrap:wrap;padding:1rem 1.1rem;border-top:2px dashed var(--line);font-family:var(--mono);font-size:.76rem;color:var(--muted)}
-.readout b{color:var(--ink);font-size:.92rem}
-.check{display:flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.7rem;cursor:pointer;color:var(--muted)}
-.check input{accent-color:var(--accent2);width:16px;height:16px}
+    /* =========================================================
+       5. SEÇÕES PRINCIPAIS
+       ========================================================= */
+    section { padding: 4rem 0; border-bottom: 1px solid var(--borda); }
+    
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--agua-secundaria) 0%, var(--agua-primaria) 100%);
+      color: white; text-align: center; padding: 5rem 0;
+    }
+    .hero h1 { color: white; }
+    .hero p { font-size: 1.2rem; max-width: 700px; margin: 0 auto 2rem; opacity: 0.9; }
 
-.grid2{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,4vw,4rem);align-items:start}
+    /* Grid de Conteúdo (Bento Box) */
+    .bento-grid {
+      display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 2rem;
+    }
+    @media (min-width: 768px) {
+      .bento-grid { grid-template-columns: repeat(2, 1fr); }
+      .bento-grid .span-2 { grid-column: span 2; }
+    }
 
-/* bento */
-.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:1.4rem;margin-top:2.4rem}
-.bcard{border:3px solid var(--ink);background:var(--surface);box-shadow:7px 7px 0 var(--ink);padding:1.5rem;transition:transform .25s,box-shadow .25s}
-.bcard:hover{transform:translate(-3px,-3px);box-shadow:10px 10px 0 var(--ink)}
-.bcard.s4{grid-column:span 4}.bcard.s2{grid-column:span 2}.bcard.s3{grid-column:span 3}
-.bcard h3{font-family:var(--disp);font-weight:700;font-size:1.1rem;text-transform:uppercase;margin-bottom:.7rem}
-.bcard p{color:var(--muted);font-size:.93rem}
-.bcard .tag{display:inline-block;font-family:var(--mono);font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;border:2px solid var(--ink);padding:.22rem .6rem;margin-top:1rem;font-weight:700;background:var(--accent3)}
-.formula{font-family:var(--mono);font-size:1.02rem;background:var(--bg2);border:2px solid var(--ink);padding:.9rem 1.1rem;margin-top:1rem;font-weight:600}
-.formula small{display:block;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+    /* Simulador Interativo */
+    .simulador-container {
+      display: grid; grid-template-columns: 1fr; gap: 2rem; margin-top: 2rem;
+    }
+    @media (min-width: 768px) {
+      .simulador-container { grid-template-columns: 1fr 1fr; }
+    }
+    .painel-controle { display: flex; flex-direction: column; gap: 1.5rem; }
+    .controle-grupo { display: flex; flex-direction: column; gap: 0.5rem; }
+    .controle-grupo label { font-family: var(--fonte-dados); font-size: 0.9rem; font-weight: 700; }
+    
+    input[type="range"] {
+      width: 100%; accent-color: var(--sol-primario); cursor: pointer;
+    }
 
-/* barras de refletância */
-.rbars{display:flex;gap:6px;align-items:flex-end;height:120px;border-bottom:3px solid var(--ink);padding-bottom:0;margin:1.2rem 0 .4rem}
-.rbars i{flex:1;display:block;background:var(--c);border:2px solid var(--ink);border-bottom:none}
-.rlab{display:flex;gap:6px;font-family:var(--mono);font-size:.55rem;color:var(--muted)}
-.rlab span{flex:1;text-align:center}
+    .painel-visual {
+      background: var(--agua-secundaria); border-radius: var(--raio-borda);
+      padding: 2rem; color: white; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .piscina-visual {
+      width: 100%; height: 150px; background: rgba(255,255,255,0.2);
+      border: 3px solid white; border-radius: 8px; margin-top: 1rem;
+      position: relative; transition: background 0.5s;
+    }
+    .onda {
+      position: absolute; bottom: 0; left: 0; width: 100%; height: 20px;
+      background: rgba(255,255,255,0.4); animation: onda 2s infinite linear;
+    }
+    @keyframes onda { 0% { transform: translateX(0); } 100% { transform: translateX(-50px); } }
 
-/* medidores */
-.meter-row{display:grid;grid-template-columns:1fr auto;gap:.3rem .8rem;align-items:center;padding:.55rem 0;border-bottom:2px dashed var(--line)}
-.meter-row small{font-family:var(--mono);font-size:.7rem}
-.meter{grid-column:1/-1;height:12px;border:2px solid var(--ink);background:#fff}
-.meter i{display:block;height:100%;background:var(--ink);width:var(--w)}
+    .dados-sensor {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; margin-top: 1.5rem;
+    }
+    .dado-box {
+      background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px;
+      font-family: var(--fonte-dados);
+    }
+    .dado-box .valor { font-size: 1.8rem; font-weight: 700; color: var(--sol-secundario); }
+    .dado-box .rotulo { font-size: 0.8rem; opacity: 0.8; }
 
-/* fluxo svg */
-.flux path.flow{stroke-dasharray:7 9;animation:dash 1.1s linear infinite}
-@keyframes dash{to{stroke-dashoffset:-16}}
-.flux text{font-family:var(--mono);fill:#131313}
-.flux .sub{fill:#625e54;font-size:10px}
+    /* Acessibilidade Toolbar */
+    .a11y-toolbar {
+      position: fixed; bottom: 20px; right: 20px; z-index: 99;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .a11y-btn {
+      width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--borda);
+      background: var(--superficie); cursor: pointer; font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s;
+    }
+    .a11y-btn:hover { transform: scale(1.1); }
 
-/* tiles / telemetria */
-.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
-.tile{border:3px solid var(--ink);background:var(--surface);box-shadow:5px 5px 0 var(--ink);padding:1rem}
-.tile small{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.4rem;font-weight:600}
-.tile .val{font-family:var(--mono);font-weight:700;font-size:clamp(1.15rem,2vw,1.6rem)}
-.tile .val u{text-decoration:none;font-size:.72rem;color:var(--muted);margin-left:.2rem}
+    /* Placeholder Libras */
+    .libras-placeholder {
+      background: #000; color: #fff; aspect-ratio: 16/9;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--raio-borda); margin-top: 1rem; border: 2px solid var(--borda);
+    }
 
-.code{background:var(--ink);color:#e8e5da;border:3px solid var(--ink);box-shadow:8px 8px 0 var(--accent3);padding:1.4rem;font-family:var(--mono);font-size:.8rem;line-height:1.8;overflow-x:auto;white-space:pre}
-.code .k{color:#7ee7ff}.code .f{color:#c8f31d}.code .s{color:#ffb3c7}.code .c{color:#7d7a70}.code .n{color:#ffd166}
+    /* Footer & Mapa do Site */
+    footer { background: var(--texto); color: var(--fundo); padding: 3rem 0; }
+    .footer-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+    @media (min-width: 768px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; } }
+    .mapa-site ul { list-style: none; }
+    .mapa-site li { margin-bottom: 0.5rem; }
+    .mapa-site a { color: var(--agua-primaria); text-decoration: none; }
+    .mapa-site a:hover { text-decoration: underline; }
 
-/* teclado cromático */
-.keys{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.2rem}
-.key{flex:1;min-width:90px;border:3px solid var(--ink);background:var(--c);color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.45);padding:.8rem .4rem;font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;box-shadow:4px 4px 0 var(--ink);cursor:pointer;transition:.12s;text-align:center;font-weight:700}
-.key:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
-.key:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
-.key.lite{color:#131313;text-shadow:none}
-
-/* filmstrip */
-.strip{display:flex;gap:1.4rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:1.4rem .2rem 1.6rem;margin-top:1.6rem}
-.frame{flex:0 0 min(330px,80vw);scroll-snap-align:start;background:var(--surface);border:3px solid var(--ink);box-shadow:7px 7px 0 var(--ink);padding:10px;transition:transform .3s}
-.frame:hover{transform:translateY(-6px) rotate(-.5deg)}
-.frame img{aspect-ratio:4/3;object-fit:cover;border:2px solid var(--ink)}
-.frame figcaption{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.7rem .2rem 0;color:var(--muted);font-weight:600}
-
-/* stats */
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;margin-top:2.6rem}
-.stat{border:3px solid var(--ink);background:var(--surface);box-shadow:6px 6px 0 var(--ink);padding:1.5rem 1.3rem}
-.stat b{display:block;font-family:var(--disp);font-weight:800;font-size:clamp(1.7rem,3vw,2.5rem);line-height:1}
-.stat small{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:600}
-
-/* pilares */
-.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2.6rem}
-.pillar{border:3px solid var(--ink);box-shadow:7px 7px 0 var(--ink);padding:1.6rem;background:var(--pb,var(--surface))}
-.pillar i{font-style:normal;font-family:var(--disp);font-weight:800;font-size:1.1rem;display:block;margin-bottom:.8rem;text-transform:uppercase}
-.pillar p{color:var(--muted);font-size:.92rem;font-weight:500}
-.pillar.dark p{color:#bdbdbd}
-
-/* acessibilidade */
-.a11y-list{list-style:none;display:grid;gap:.85rem;margin-top:1.2rem}
-.a11y-list li{padding-left:2rem;position:relative;color:var(--muted);font-weight:500}
-.a11y-list li::before{content:"■";position:absolute;left:.2rem;top:.1rem;color:var(--accent2);font-size:.8rem}
-.a11y-list li strong{color:var(--ink)}
-
-/* equipe */
-.team{display:grid;grid-template-columns:1fr 1fr;gap:1.6rem;margin-top:2.4rem}
-.member{border:3px solid var(--ink);box-shadow:8px 8px 0 var(--ink);padding:1.8rem;background:var(--mb,var(--surface));transition:transform .25s}
-.member:hover{transform:translate(-3px,-3px)}
-.member .idx{font-family:var(--mono);font-size:.7rem;letter-spacing:.2em;display:block;margin-bottom:1rem;font-weight:700}
-.member .name{font-family:var(--disp);font-weight:800;font-size:clamp(1.3rem,2.4vw,1.9rem);text-transform:uppercase;line-height:1.05}
-.member .role{font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;margin-top:.8rem;display:block;font-weight:600;color:var(--muted)}
-.member.inv .role{color:#b5b5b5}
-
-/* footer */
-footer{background:var(--ink);color:var(--bg);padding:4rem 0 7rem;border-top:6px solid var(--accent3)}
-.f-word{font-family:var(--disp);font-weight:800;font-size:clamp(2.6rem,9vw,7rem);text-transform:uppercase;line-height:.95;color:transparent;-webkit-text-stroke:2px #4a4a4a;margin-bottom:2.5rem;letter-spacing:-.02em}
-.f-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2.5rem}
-footer h4{font-family:var(--mono);font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--accent3);margin-bottom:1rem}
-footer ul{list-style:none}
-footer li{margin-bottom:.5rem}
-footer a{color:#b9b9b9;text-decoration:none;font-size:.9rem}
-footer a:hover{color:var(--accent3);text-decoration:underline}
-.f-note{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #333;font-family:var(--mono);font-size:.68rem;color:#7d7d7d;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-
-/* toolbar acessibilidade */
-.atb-btn{position:fixed;left:104px;bottom:1.2rem;z-index:160;width:56px;height:56px;background:var(--accent3);border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);font-size:1.3rem;cursor:pointer;transition:.15s;font-weight:700}
-.atb-btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink)}
-.atb{position:fixed;left:104px;bottom:5.4rem;z-index:160;width:290px;background:var(--surface);border:3px solid var(--ink);box-shadow:10px 10px 0 var(--ink);padding:1.3rem}
-.atb[hidden]{display:none}
-.atb h3{font-family:var(--disp);font-size:1rem;text-transform:uppercase;margin-bottom:1rem}
-.atb-row{display:flex;gap:.5rem;margin-bottom:.7rem}
-.abtn{flex:1;border:2px solid var(--ink);background:#fff;box-shadow:3px 3px 0 var(--ink);padding:.6rem;font-size:.85rem;cursor:pointer;font-weight:700;transition:.12s}
-.abtn:hover{transform:translate(-1px,-1px)}
-.abtn[aria-pressed="true"]{background:var(--ink);color:var(--accent3)}
-.atb small{display:block;font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:.4rem}
-
-/* alto contraste / mov reduzido */
-body.hc{--bg:#ffffff;--bg2:#ffffff;--surface:#ffffff;--muted:#000;--line:#000}
-body.hc{background-image:none}
-body.hc a{text-decoration:underline}
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
-}
-body.rm *,body.rm *::before,body.rm *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
-body.rm{scroll-behavior:auto}
-
-/* ============ RESPONSIVO ============ */
-@media (max-width:1020px){
-  body{padding-left:0}
-  .snav{display:none}
-  .tnav{display:flex}
-  .hero-grid,.grid2{grid-template-columns:1fr}
-  .bento{grid-template-columns:1fr}
-  .bcard.s4,.bcard.s2,.bcard.s3{grid-column:auto}
-  .tiles{grid-template-columns:1fr 1fr}
-  .stat-row{grid-template-columns:1fr 1fr}
-  .pillars{grid-template-columns:1fr}
-  .team{grid-template-columns:1fr}
-  .f-grid{grid-template-columns:1fr}
-  .atb-btn,.atb{left:1rem}
-}
-@media (max-width:600px){
-  .tiles,.stat-row{grid-template-columns:1fr}
-  input[type=range]{width:100%}
-  #prism{height:330px}
-}
-</style>
+  </style>
 </head>
 <body>
 
-<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+  <!-- A11y: Pular para conteúdo principal -->
+  <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo principal</a>
 
-<!-- ============ NAV LATERAL (DESKTOP) ============ -->
-<nav class="snav" aria-label="Navegação principal">
-  <div class="mark" aria-hidden="true">
-    <svg viewBox="0 0 32 32"><path d="M16 4 30 28 2 28 Z" fill="none" stroke="#c8f31d" stroke-width="3" stroke-linejoin="round"/></svg>
-  </div>
-  <ul>
-    <li><a href="#tema">01 · Tema</a></li>
-    <li><a href="#bancada">02 · Bancada</a></li>
-    <li><a href="#dispositivo">03 · Dispositivo</a></li>
-    <li><a href="#aplicacao">04 · Aplicação</a></li>
-    <li><a href="#acessibilidade">05 · Acesso</a></li>
-    <li><a href="#impacto">06 · Impacto</a></li>
-    <li><a href="#equipe">07 · Equipe</a></li>
-  </ul>
-  <div id="progV" aria-hidden="true"></div>
-</nav>
-
-<!-- ============ NAV MOBILE ============ -->
-<header class="tnav">
-  <span class="tb">ESPECTROLAB</span>
-  <button class="burger" id="menuBtn" aria-expanded="false" aria-controls="mnav" aria-label="Abrir menu"><span></span><span></span><span></span></button>
-  <div id="progT" aria-hidden="true"></div>
-</header>
-<nav class="mnav" id="mnav" aria-label="Menu móvel">
-  <button class="mclose" id="mclose" aria-label="Fechar menu">✕</button>
-  <a href="#tema">O Fenômeno <small>01</small></a>
-  <a href="#bancada">Bancada Interativa <small>02</small></a>
-  <a href="#dispositivo">O Dispositivo <small>03</small></a>
-  <a href="#aplicacao">Aplicação <small>04</small></a>
-  <a href="#acessibilidade">Acessibilidade <small>05</small></a>
-  <a href="#impacto">Impacto <small>06</small></a>
-  <a href="#equipe">Equipe <small>07</small></a>
-</nav>
-
-<main id="conteudo">
-
-<!-- ============ HERO PÔSTER ============ -->
-<section class="hero" id="inicio" style="border-top:none" aria-label="Abertura do projeto">
-  <div class="wrap">
-    <div class="hero-grid">
-      <div>
-        <p class="kick" data-scramble><b>PI · 2026</b> Equipe Espectro apresenta</p>
-        <h1 class="hero-title" aria-label="Dispersão: da luz branca em sete cores, por meio da refração">
-          <span class="t1 rv in">DISPERSÃO</span>
-          <span class="t2 rv in" style="--d:.12s">DA LUZ BRANCA</span>
-          <span class="t3 rv in" style="--d:.24s">EM 7 CORES<span class="spec-bar" aria-hidden="true"></span></span>
-        </h1>
-        <p class="hero-sub rv" style="--d:.36s">Construímos o <strong>ESPECTROLAB</strong>: um espectroscópio de baixo custo que usa um <strong>prisma</strong> para separar a luz por <strong>refração</strong>, mede o espectro com sensores robóticos e o transforma em <strong>dados, música e inclusão</strong> — para qualquer sala de aula.</p>
-        <div class="hero-cta rv" style="--d:.48s">
-          <a class="btn btn-pr" href="#bancada">Abrir a bancada ▸</a>
-          <a class="btn" href="#dispositivo">Ver o dispositivo</a>
-        </div>
-        <div class="stamps rv" style="--d:.6s">
-          <span class="stamp y" style="--r:-2deg">Óptica + Robótica</span>
-          <span class="stamp" style="--r:1.5deg">λ 410–680 nm</span>
-          <span class="stamp c" style="--r:-1deg">100% acessível</span>
-          <span class="stamp" style="--r:2deg">≈ R$ 120 por unidade</span>
-        </div>
+  <!-- HEADER -->
+  <header role="banner">
+    <div class="container nav-container">
+      <div class="logo" aria-label="Projeto Integrador CEP">
+        ☀️ Projeto <span>CEP</span>
       </div>
-      <div class="rv" style="--d:.3s">
-        <div class="figure-card">
-          <canvas id="prism" role="img" aria-label="Ilustração interativa: um feixe de luz branca atravessa um prisma e se dispersa nas sete cores do espectro. Mova o cursor para alterar o ângulo do feixe."></canvas>
-          <div class="cap"><span>FIG. 01 — REFRAÇÃO DISPERSIVA</span><span>MOVA O CURSOR ⟋</span></div>
-        </div>
-      </div>
-    </div>
-    <p class="scroll-hint">Role para refracionar</p>
-  </div>
-</section>
-
-<!-- faixa espectro -->
-<div class="band" aria-hidden="true">
-  <div class="tk-track">
-    <span><i style="--c:var(--red)"></i>VERMELHO 650 NM</span><span><i style="--c:var(--orange)"></i>LARANJA 610 NM</span><span><i style="--c:var(--yellow)"></i>AMARELO 580 NM</span><span><i style="--c:var(--green)"></i>VERDE 530 NM</span><span><i style="--c:var(--cyan)"></i>CIANO 490 NM</span><span><i style="--c:var(--blue)"></i>AZUL 450 NM</span><span><i style="--c:var(--violet)"></i>VIOLETA 410 NM</span><span>◆ n₁·sen θ₁ = n₂·sen θ₂</span><span>◆ n(λ) = A + B/λ²</span><span>◆ v = c / n</span>
-    <span><i style="--c:var(--red)"></i>VERMELHO 650 NM</span><span><i style="--c:var(--orange)"></i>LARANJA 610 NM</span><span><i style="--c:var(--yellow)"></i>AMARELO 580 NM</span><span><i style="--c:var(--green)"></i>VERDE 530 NM</span><span><i style="--c:var(--cyan)"></i>CIANO 490 NM</span><span><i style="--c:var(--blue)"></i>AZUL 450 NM</span><span><i style="--c:var(--violet)"></i>VIOLETA 410 NM</span><span>◆ n₁·sen θ₁ = n₂·sen θ₂</span><span>◆ n(λ) = A + B/λ²</span><span>◆ v = c / n</span>
-  </div>
-</div>
-
-<!-- ============ 01 O FENÔMENO ============ -->
-<section id="tema">
-  <span class="ghost" aria-hidden="true">01</span>
-  <div class="wrap">
-    <p class="kick"><b>01</b> O fenômeno</p>
-    <h2 class="h2 lm"><span>O arco-íris que mora dentro da luz</span></h2>
-    <div class="grid2">
-      <div>
-        <p class="lead rv">Em 1666, Isaac Newton fechou um quarto escuro, abriu uma fresta para o sol e colocou um <strong>prisma de vidro</strong> no caminho do feixe. Na parede apareceu uma faixa colorida: o <strong>espectro</strong>. Estava provado que a luz branca é a soma de todas as cores.</p>
-        <p class="lead rv" style="--d:.12s;margin-top:1rem">A separação acontece pela <strong>refração</strong>: ao entrar no vidro, a luz muda de velocidade (<span class="mono">v = c / n</span>). E o índice de refração <strong>depende do comprimento de onda</strong> — o violeta freia mais e se curva mais; o vermelho quase segue reto. Essa dependência de n com λ é a <strong>dispersão</strong>, descrita pela equação de Cauchy.</p>
-      </div>
-      <div class="rv" style="--d:.2s">
-        <div class="formula"><small>Lei de Snell — quanto a luz se curva</small>n₁ · sen θ₁ = n₂ · sen θ₂</div>
-        <div class="formula"><small>Equação de Cauchy — por que cada cor curva diferente</small>n(λ) ≈ A + B / λ²</div>
-        <div class="formula"><small>Número de Abbe — mede o “poder de dispersão” do material</small>V = (n<sub>d</sub> − 1) / (n<sub>F</sub> − n<sub>C</sub>) &nbsp;·&nbsp; V baixo ⇒ muita dispersão</div>
-      </div>
-    </div>
-    <div class="bento">
-      <div class="bcard s4 rv">
-        <h3>Prisma ≠ Rede de difração</h3>
-        <p>Nosso projeto usa <strong>refração</strong>, não difração: a luz atravessa o material e cada cor emerge em um ângulo. Vidro comum (V ≈ 58) dispersa pouco; vidro flint (V ≈ 36) dispersa quase o dobro — por isso escolhemos <strong>acrílico flint</strong> para o prisma do ESPECTROLAB: dispersão alta, custo baixo e corte fácil.</p>
-        <span class="tag">Materiais · V de Abbe</span>
-      </div>
-      <div class="bcard s2 rv" style="--d:.1s">
-        <h3>Câmara escura</h3>
-        <p>Só vemos um objeto quando a luz que ele <strong>reflete</strong> chega aos olhos. Cor não está nas coisas — está na luz que elas devolvem. Essa ideia guia todo o projeto.</p>
-        <span class="tag">Percepção</span>
-      </div>
-      <div class="bcard s3 rv">
-        <h3>Disco de Newton: a prova reversa</h3>
-        <p>Se o prisma separa, o disco reúne: girando as sete cores rápido o bastante, a persistência da visão soma tudo e enxergamos branco — síntese aditiva pura. Teste você mesmo na bancada abaixo.</p>
-        <span class="tag">Newton · síntese aditiva</span>
-      </div>
-      <div class="bcard s3 rv" style="--d:.1s">
-        <h3>Por que isso importa?</h3>
-        <p>Espectroscopia é como cientistas descobrem do que são feitas estrelas, lâmpadas e até alimentos. Nosso objetivo: colocar esse instrumento na mão de estudantes — <strong>inclusive estudantes cegos</strong>, que poderão ouvir o espectro.</p>
-        <span class="tag">Ciência para todos</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 02 BANCADA INTERATIVA ============ -->
-<section id="bancada">
-  <span class="ghost gl" aria-hidden="true">02</span>
-  <div class="wrap">
-    <p class="kick"><b>02</b> Bancada interativa</p>
-    <h2 class="h2 lm"><span>Experimente a física, ao vivo</span></h2>
-    <p class="lead rv" style="margin-bottom:2.5rem">Dois instrumentos interativos, calculados em tempo real no seu navegador com as equações verdadeiras da óptica geométrica.</p>
-
-    <!-- REFRAÇÃO -->
-    <div class="panel rv">
-      <div class="panel-bar"><i style="--c:var(--accent2)"></i><i style="--c:var(--accent3)"></i><i style="--c:var(--accent)"></i><span class="t">Instrumento A — Refração &amp; dispersão · Lei de Snell ao vivo</span></div>
-      <canvas id="refrCanvas" height="430" role="img" aria-label="Simulador de refração: um feixe de luz branca atravessa a interface entre ar e o meio escolhido e se dispersa, com o violeta se curvando mais que o vermelho"></canvas>
-      <div class="panel-ctrl">
-        <div class="ctrl">
-          <label for="incAngle">Ângulo de incidência θ₁ — <output id="incVal">45°</output></label>
-          <input type="range" id="incAngle" min="10" max="80" value="45" aria-label="Ângulo de incidência em graus">
-        </div>
-        <div class="ctrl">
-          <label id="medLbl">Meio refrator</label>
-          <div class="seg" role="group" aria-labelledby="medLbl">
-            <button data-n="1.52" data-name="Vidro crown" aria-pressed="true">Vidro · 1,52</button>
-            <button data-n="1.333" data-name="Água" aria-pressed="false">Água · 1,33</button>
-            <button data-n="1.49" data-name="Acrílico" aria-pressed="false">Acrílico · 1,49</button>
-            <button data-n="2.417" data-name="Diamante" aria-pressed="false">Diamante · 2,42</button>
-          </div>
-        </div>
-        <label class="check"><input type="checkbox" id="ampDisp" checked> Amplificar dispersão na tela ×40 (na realidade ela é sutil)</label>
-      </div>
-      <div class="readout" aria-live="polite">
-        <span>θ₂ vermelho <b id="rRed">—</b></span>
-        <span>θ₂ violeta <b id="rVio">—</b></span>
-        <span>Δθ real <b id="rDelta">—</b></span>
-        <span>n(650 nm) <b id="rNr">—</b></span>
-        <span>n(410 nm) <b id="rNv">—</b></span>
-      </div>
-    </div>
-
-    <!-- DISCO DE NEWTON -->
-    <div class="grid2" style="margin-top:3rem">
-      <div class="panel rv">
-        <div class="panel-bar"><i style="--c:var(--cyan)"></i><i style="--c:var(--blue)"></i><i style="--c:var(--violet)"></i><span class="t">Instrumento B — Disco de Newton</span></div>
-        <div style="display:flex;justify-content:center;padding:1.6rem;background:var(--surface)"><canvas id="diskC" width="300" height="300" role="img" aria-label="Disco de Newton com sete setores coloridos girando"></canvas></div>
-        <div class="panel-ctrl">
-          <div class="ctrl" style="flex:1;min-width:200px">
-            <label for="rpm">Rotação — <output id="rpmVal">120 rpm</output></label>
-            <input type="range" id="rpm" min="0" max="600" step="10" value="120" aria-label="Rotações por minuto do disco">
-          </div>
-          <div class="seg">
-            <button data-rpm="0" aria-pressed="false">Parado</button>
-            <button data-rpm="60" aria-pressed="false">Lento</button>
-            <button data-rpm="120" aria-pressed="true">Rápido</button>
-            <button data-rpm="600" aria-pressed="false">Máximo</button>
-          </div>
-        </div>
-      </div>
-      <div class="rv" style="--d:.15s">
-        <h3 class="disp" style="font-weight:700;font-size:1.3rem;text-transform:uppercase;margin-bottom:1rem">Gire até o branco aparecer</h3>
-        <p class="lead">Acima de ~90 rpm, o olho não acompanha mais as cores individuais: vermelho, laranja, amarelo, verde, ciano, azul e violeta se somam e percebemos <strong>branco</strong>.</p>
-        <div style="display:flex;gap:1rem;align-items:center;margin-top:1.4rem">
-          <div id="percSwatch" style="width:54px;height:54px;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);flex:none" role="img" aria-label="Cor percebida pelo observador"></div>
-          <p class="mono" id="percTxt" style="font-size:.78rem;color:var(--muted)" aria-live="polite">Percepção: branco por síntese aditiva.</p>
-        </div>
-        <p class="lead" style="margin-top:1.4rem">É o argumento que Newton usou contra a ideia de que o prisma “pintava” a luz: as cores já estavam lá. E é a mesma lógica do nosso dispositivo — ele apenas <strong>lê, uma a uma, as cores que o prisma separa</strong>.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 03 O DISPOSITIVO ============ -->
-<section id="dispositivo">
-  <span class="ghost" aria-hidden="true">03</span>
-  <div class="wrap">
-    <p class="kick"><b>03</b> Robótica &amp; programação</p>
-    <h2 class="h2 lm"><span>Espectrolab: a máquina de ler arco-íris</span></h2>
-    <p class="lead rv">Um servo motor varre um sensor RGB pelos 24 pontos do espectro projetado pelo prisma. O microcontrolador registra a intensidade de cada cor, publica os dados neste site e converte cada comprimento de onda em uma nota musical.</p>
-
-    <!-- ANALISADOR AO VIVO -->
-    <div class="panel rv" style="margin-top:2.5rem">
-      <div class="panel-bar"><i style="--c:var(--accent3)"></i><i style="--c:var(--accent)"></i><i style="--c:var(--accent2)"></i><span class="t">Analisador espectral — varredura do sensor ao vivo</span></div>
-      <canvas id="anCanvas" height="330" role="img" aria-label="Analisador espectral simulado: barras coloridas do vermelho ao violeta crescem conforme o sensor varre o espectro da fonte de luz escolhida"></canvas>
-      <div class="panel-ctrl">
-        <div class="ctrl">
-          <label id="srcLbl">Fonte de luz analisada</label>
-          <div class="seg" role="group" aria-labelledby="srcLbl">
-            <button data-src="sol" aria-pressed="true">☀ Sol</button>
-            <button data-src="inc" aria-pressed="false">Incandescente</button>
-            <button data-src="led" aria-pressed="false">LED frio</button>
-            <button data-src="flu" aria-pressed="false">Fluorescente</button>
-          </div>
-        </div>
-        <div class="ctrl">
-          <label>&nbsp;</label>
-          <button class="btn btn-y" id="anPlay" style="padding:.55rem 1rem;font-size:.78rem" aria-pressed="true">⏸ Pausar varredura</button>
-        </div>
-        <div class="ctrl" style="flex:1;min-width:220px">
-          <label>Leitura do sensor</label>
-          <p class="mono" id="anRead" style="font-size:.85rem;font-weight:700" aria-hidden="true">iniciando varredura…</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- FLUXOGRAMA -->
-    <svg class="flux rv" viewBox="0 0 940 300" role="img" aria-label="Fluxograma do dispositivo: a fonte de luz passa pelo prisma, o sensor RGB montado em um servo varre o espectro e o ESP32 envia os dados para o site, para o alto-falante e para o anel de LEDs" style="margin-top:3rem;width:100%;background:var(--surface);border:3px solid var(--ink);box-shadow:8px 8px 0 var(--ink)">
-      <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#131313"/></marker></defs>
-      <rect x="20" y="115" width="150" height="76" fill="#fff" stroke="#131313" stroke-width="2.5"/>
-      <text x="38" y="145" font-size="12" font-weight="700">FONTE DE LUZ</text><text x="38" y="165" class="sub">sol · LED · lâmpada</text>
-      <path class="flow" d="M170 153 H 228" stroke="#131313" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
-      <rect x="232" y="90" width="170" height="126" fill="#fff" stroke="#131313" stroke-width="2.5"/>
-      <path d="M317 108 362 190 272 190 Z" fill="none" stroke="#ff3366" stroke-width="2.5"/>
-      <text x="250" y="208" font-size="11" font-weight="700">PRISMA — dispersão</text>
-      <path class="flow" d="M402 153 H 458" stroke="#131313" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
-      <rect x="462" y="115" width="170" height="76" fill="#fff" stroke="#131313" stroke-width="2.5"/>
-      <text x="480" y="145" font-size="12" font-weight="700">SENSOR RGB</text><text x="480" y="165" class="sub">TCS34725 no carrinho</text>
-      <rect x="462" y="228" width="170" height="52" fill="#c8f31d" stroke="#131313" stroke-width="2.5"/>
-      <text x="480" y="250" font-size="12" font-weight="700">SERVO SG90</text><text x="480" y="268" class="sub">varre 0–180°</text>
-      <path class="flow" d="M547 228 V 191" stroke="#131313" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
-      <path class="flow" d="M632 153 H 688" stroke="#131313" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
-      <rect x="692" y="115" width="110" height="76" fill="#fff" stroke="#131313" stroke-width="2.5"/>
-      <text x="710" y="145" font-size="12" font-weight="700">ESP32</text><text x="710" y="165" class="sub">lógica + wifi</text>
-      <path class="flow" d="M802 133 H 828 V 60 H 848" stroke="#131313" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
-      <path class="flow" d="M802 153 H 848" stroke="#131313" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
-      <path class="flow" d="M802 173 H 828 V 246 H 848" stroke="#131313" stroke-width="2.5" fill="none" marker-end="url(#arr)"/>
-      <rect x="852" y="32" width="80" height="56" fill="#00c2e0" stroke="#131313" stroke-width="2.5"/><text x="866" y="56" font-size="11" font-weight="700">SITE</text><text x="866" y="72" class="sub">telemetria</text>
-      <rect x="852" y="125" width="80" height="56" fill="#c8f31d" stroke="#131313" stroke-width="2.5"/><text x="866" y="149" font-size="11" font-weight="700">SOM</text><text x="866" y="165" class="sub">sonificação</text>
-      <rect x="852" y="218" width="80" height="56" fill="#fff" stroke="#131313" stroke-width="2.5"/><text x="866" y="242" font-size="11" font-weight="700">ANEL</text><text x="866" y="258" class="sub">12 LEDs</text>
-    </svg>
-
-    <!-- TELEMETRIA + CÓDIGO -->
-    <div class="grid2" style="margin-top:3rem">
-      <div class="rv">
-        <h3 class="disp" style="font-weight:700;text-transform:uppercase;font-size:1.2rem;margin-bottom:1.2rem">Telemetria da última varredura</h3>
-        <div class="tiles">
-          <div class="tile"><small>Ponto varrido</small><div class="val"><span id="tPos">12</span><u>/24</u></div></div>
-          <div class="tile"><small>λ atual</small><div class="val"><span id="tWl">536</span><u>nm</u></div></div>
-          <div class="tile"><small>Intensidade</small><div class="val"><span id="tInt">0,82</span><u>rel.</u></div></div>
-          <div class="tile"><small>Nota gerada</small><div class="val" id="tNota">Si₄</div></div>
-        </div>
-        <p class="mono" style="font-size:.68rem;color:var(--muted);margin-top:1rem">CADA MEDIÇÃO: servo posiciona → aguarda 80 ms → lê RGB → publica. 24 pontos × 4 fontes = 96 leituras por ciclo completo.</p>
-      </div>
-      <pre class="code rv" style="--d:.15s" aria-label="Pseudocódigo da varredura espectral"><code><span class="c">// varredura espectral — 24 posições</span>
-<span class="k">para</span> pos <span class="k">em</span> <span class="n">0</span>..<span class="n">23</span>:
-    servo.<span class="f">mover</span>(pos * <span class="n">7.5</span>°)
-    <span class="f">aguardar</span>(<span class="n">80</span> ms)          <span class="c">// estabiliza</span>
-    (R,G,B) = sensor.<span class="f">ler</span>()
-    espectro[pos] = <span class="f">normalizar</span>(R,G,B)
-
-λ = <span class="f">mapear</span>(pos, <span class="n">680</span> → <span class="n">410</span> nm)
-nota = <span class="f">frequencia</span>(λ)          <span class="c">// sonificação</span>
-alto_falante.<span class="f">tocar</span>(nota, <span class="n">60</span> ms)
-telemetria.<span class="f">enviar</span>(espectro)   <span class="c">// → este site</span></code></pre>
-    </div>
-
-    <!-- GALERIA -->
-    <h3 class="disp rv" style="font-weight:700;text-transform:uppercase;font-size:1.3rem;margin-top:3.5rem">Bastidores da construção</h3>
-    <div class="strip rv" style="--d:.1s">
-      <figure class="frame"><img src="https://picsum.photos/seed/espectrolab-prisma-bancada/640/480" alt="Prisma acrílico montado sobre a caixa de madeira do espectrolab" loading="lazy"><figcaption>Prisma alinhado na caixa</figcaption></figure>
-      <figure class="frame"><img src="https://picsum.photos/seed/sensor-rgb-arduino/640/480" alt="Sensor RGB conectado a fios em uma protoboard" loading="lazy"><figcaption>Sensor TCS34725 + ESP32</figcaption></figure>
-      <figure class="frame"><img src="https://picsum.photos/seed/servo-carrinho-3d/640/480" alt="Servo motor com carrinho deslizante impresso em 3D" loading="lazy"><figcaption>Carrinho do servo (0–180°)</figcaption></figure>
-      <figure class="frame"><img src="https://picsum.photos/seed/espectro-parede-lab/640/480" alt="Espectro colorido projetado na parede do laboratório" loading="lazy"><figcaption>Primeiro espectro projetado</figcaption></figure>
-      <figure class="frame"><img src="https://picsum.photos/seed/etiquetas-braille-lab/640/480" alt="Etiquetas em braille coladas nos controles do dispositivo" loading="lazy"><figcaption>Etiquetas em braille</figcaption></figure>
-      <figure class="frame"><img src="https://picsum.photos/seed/equipe-quatro-laboratorio/640/480" alt="Quatro estudantes montando o dispositivo juntos" loading="lazy"><figcaption>A equipe em ação</figcaption></figure>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 04 APLICAÇÃO ============ -->
-<section id="aplicacao">
-  <span class="ghost gl" aria-hidden="true">04</span>
-  <div class="wrap">
-    <p class="kick"><b>04</b> Aplicação prática</p>
-    <h2 class="h2 lm"><span>O espectro decide o material da placa</span></h2>
-    <p class="lead rv" style="margin-bottom:.5rem">O ESPECTROLAB também mede <strong>quanto cada superfície reflete de cada cor</strong>. Foi assim que respondemos à pergunta clássica da energia solar: <strong>por que placas coletoras são pretas?</strong></p>
-    <div class="bento">
-      <div class="bcard s3 rv">
-        <h3>Superfície preta fosca</h3>
-        <p>Reflete quase nada em <strong>todo</strong> o espectro — absorve vermelho, verde e violeta igualmente. Fóton absorvido = molécula agitada = calor.</p>
-        <div class="rbars" aria-hidden="true">
-          <i style="--c:var(--red);height:6%"></i><i style="--c:var(--orange);height:5%"></i><i style="--c:var(--yellow);height:5%"></i><i style="--c:var(--green);height:4%"></i><i style="--c:var(--cyan);height:5%"></i><i style="--c:var(--blue);height:6%"></i><i style="--c:var(--violet);height:7%"></i>
-        </div>
-        <div class="rlab" aria-hidden="true"><span>R</span><span>L</span><span>A</span><span>V</span><span>C</span><span>AZ</span><span>VI</span></div>
-        <span class="tag">Refletância medida ≈ 5 %</span>
-      </div>
-      <div class="bcard s3 rv" style="--d:.1s">
-        <h3>Superfície branca</h3>
-        <p>Devolve quase todas as cores — por isso a vemos branca (câmara escura em ação!) e por isso ela <strong>não esquenta</strong>: a energia vai embora refletida.</p>
-        <div class="rbars" aria-hidden="true">
-          <i style="--c:var(--red);height:80%"></i><i style="--c:var(--orange);height:83%"></i><i style="--c:var(--yellow);height:86%"></i><i style="--c:var(--green);height:85%"></i><i style="--c:var(--cyan);height:84%"></i><i style="--c:var(--blue);height:82%"></i><i style="--c:var(--violet);height:78%"></i>
-        </div>
-        <div class="rlab" aria-hidden="true"><span>R</span><span>L</span><span>A</span><span>V</span><span>C</span><span>AZ</span><span>VI</span></div>
-        <span class="tag">Refletância medida ≈ 82 %</span>
-      </div>
-      <div class="bcard s4 rv">
-        <h3>Ranking de absorção — medido pelo nosso dispositivo</h3>
-        <div class="meter-row"><small><strong>Superfície seletiva (cromo negro)</strong></small><small>96 %</small><span class="meter"><i style="--w:96%"></i></span></div>
-        <div class="meter-row"><small><strong>Pintura preta fosca</strong></small><small>93 %</small><span class="meter"><i style="--w:93%"></i></span></div>
-        <div class="meter-row"><small><strong>Vidro comum (transmissão p/ cobertura)</strong></small><small>91 %</small><span class="meter"><i style="--w:91%"></i></span></div>
-        <div class="meter-row"><small><strong>Tinta branca</strong></small><small>15 %</small><span class="meter"><i style="--w:15%"></i></span></div>
-        <div class="meter-row"><small><strong>Alumínio polido</strong></small><small>12 %</small><span class="meter"><i style="--w:12%"></i></span></div>
-      </div>
-      <div class="bcard s2 rv" style="--d:.1s">
-        <h3>Conclusão</h3>
-        <p>Placa preta + cobertura de vidro (que refrata a luz para dentro) + ângulo que respeita Snell = máximo de energia capturada do espectro. O mesmo raciocínio vale para painéis fotovoltaicos e para qualquer coisa que viva de sol.</p>
-        <span class="tag">Óptica → eficiência</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 05 ACESSIBILIDADE ============ -->
-<section id="acessibilidade">
-  <span class="ghost" aria-hidden="true">05</span>
-  <div class="wrap">
-    <p class="kick"><b>05</b> Acessibilidade &amp; inclusão</p>
-    <h2 class="h2 lm"><span>E se o espectro pudesse ser ouvido?</span></h2>
-    <div class="grid2">
-      <div class="rv">
-        <p class="lead">Mapeamos cada comprimento de onda em uma frequência sonora: <strong>vermelho = nota grave, violeta = nota aguda</strong>. Um estudante cego pode acompanhar a varredura do sensor ouvindo as cores — e qualquer pessoa pode tocar o teclado cromático abaixo.</p>
-        <div class="keys" role="group" aria-label="Teclado cromático: botões que tocam a nota de cada cor do espectro">
-          <button class="key" data-wl="650" style="--c:var(--red)">Vermelho<br>650 nm</button>
-          <button class="key" data-wl="610" style="--c:var(--orange)">Laranja<br>610 nm</button>
-          <button class="key lite" data-wl="580" style="--c:var(--yellow)">Amarelo<br>580 nm</button>
-          <button class="key" data-wl="530" style="--c:var(--green)">Verde<br>530 nm</button>
-          <button class="key" data-wl="490" style="--c:var(--cyan)">Ciano<br>490 nm</button>
-          <button class="key" data-wl="450" style="--c:var(--blue)">Azul<br>450 nm</button>
-          <button class="key" data-wl="415" style="--c:var(--violet)">Violeta<br>415 nm</button>
-        </div>
-        <button class="btn btn-pr" id="btnListen" style="margin-top:1.4rem">▶ Ouvir o espectro completo</button>
-      </div>
-      <div class="rv" style="--d:.15s">
-        <h3 class="disp" style="font-weight:700;text-transform:uppercase;font-size:1.15rem;margin-bottom:.8rem">Acessibilidade no dispositivo e no site</h3>
-        <ul class="a11y-list">
-          <li><strong>Sonificação do espectro</strong> no hardware (alto-falante) e aqui no site.</li>
-          <li><strong>Braille e relevo</strong> nos controles físicos do ESPECTROLAB.</li>
-          <li><strong>Fonte ajustável</strong> (A− / A+), <strong>alto contraste</strong> e <strong>reduzir movimento</strong> — botão flutuante no canto da tela.</li>
-          <li><strong>Navegação completa por teclado</strong>, foco visível e link “pular para o conteúdo”.</li>
-          <li><strong>Textos alternativos</strong> em todas as imagens, gráficos e simuladores.</li>
-          <li><strong>HTML semântico</strong>, idioma declarado e contraste mínimo WCAG 2.1 AA.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 06 IMPACTO ============ -->
-<section id="impacto">
-  <span class="ghost gl" aria-hidden="true">06</span>
-  <div class="wrap">
-    <p class="kick"><b>06</b> Inovação &amp; impacto social</p>
-    <h2 class="h2 lm"><span>Ciência de laboratório a preço de feira</span></h2>
-    <p class="lead rv">Espectroscópios comerciais custam milhares de reais. O nosso custa o preço de um lanche coletivo — e foi pensado para ser montado em qualquer escola, por qualquer estudante.</p>
-    <div class="stat-row">
-      <div class="stat rv"><b data-count="120" data-prefix="R$ ">0</b><small>custo estimado / unidade</small></div>
-      <div class="stat rv" style="--d:.1s"><b data-count="24">0</b><small>pontos medidos por espectro</small></div>
-      <div class="stat rv" style="--d:.2s"><b data-count="270" data-suffix=" nm">0</b><small>faixa coberta (410–680)</small></div>
-      <div class="stat rv" style="--d:.3s"><b data-count="100" data-suffix=" %">0</b><small>dos recursos acessíveis</small></div>
-    </div>
-    <div class="pillars">
-      <div class="pillar rv" style="--pb:var(--accent3)"><i>Educação maker</i><p>Física óptica deixa de ser só quadro-negro: o estudante monta, mede, erra, calibra e entende — com as próprias mãos e ouvidos.</p></div>
-      <div class="pillar rv" style="--pb:var(--accent)" style="--d:.1s"><i>Inclusão real</i><p>Pela primeira vez, um experimento de cores que estudante cego não apenas acompanha: ele é o único que pode ouvi-lo inteiro.</p></div>
-      <div class="pillar rv dark" style="--d:.2s;--pb:var(--ink)"><i>Baixo custo &amp; replicável</i><p>Madeira reutilizada, acrílico, um servo e um sensor. Código e plantas abertos para outras equipes copiarem e melhorarem.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 07 EQUIPE ============ -->
-<section id="equipe">
-  <span class="ghost" aria-hidden="true">07</span>
-  <div class="wrap">
-    <p class="kick"><b>07</b> Equipe Espectro</p>
-    <h2 class="h2 lm"><span>Quatro pessoas, sete cores</span></h2>
-    <!-- ✏️ Troquem pelos nomes reais da equipe -->
-    <div class="team">
-      <div class="member rv"><span class="idx">INTEGRANTE 01</span><div class="name">Ana Ferreira</div><span class="role">Óptica &amp; fundamentos físicos</span></div>
-      <div class="member rv" style="--d:.08s;--mb:var(--accent)"><span class="idx">INTEGRANTE 02</span><div class="name">Bruno Souza</div><span class="role" style="color:#033">Firmware, sensores &amp; servo</span></div>
-      <div class="member rv" style="--d:.16s;--mb:var(--accent3)"><span class="idx">INTEGRANTE 03</span><div class="name">Carla Lima</div><span class="role" style="color:#333a05">Site, simuladores &amp; sonificação</span></div>
-      <div class="member inv rv" style="--d:.24s;--mb:var(--ink)"><span class="idx" style="color:var(--accent3)">INTEGRANTE 04</span><div class="name" style="color:#fff">Diego Santos</div><span class="role">Design, acessibilidade &amp; braille</span></div>
-    </div>
-  </div>
-</section>
-</main>
-
-<!-- ============ RODAPÉ ============ -->
-<footer>
-  <div class="wrap">
-    <div class="f-word" aria-hidden="true">ESPECTROLAB</div>
-    <div class="f-grid">
-      <div>
-        <h4>Projeto Integrador · 2026</h4>
-        <p style="color:#b9b9b9;font-size:.9rem;max-width:36ch">Dispersão da luz por meio da refração: um espectroscópio educacional, automatizado e acessível, feito por quatro estudantes.</p>
-      </div>
-      <div>
-        <h4>Mapa do site</h4>
+      <nav role="navigation" aria-label="Menu principal">
         <ul>
-          <li><a href="#tema">O fenômeno</a></li>
-          <li><a href="#bancada">Bancada interativa</a></li>
-          <li><a href="#dispositivo">O dispositivo</a></li>
-          <li><a href="#aplicacao">Aplicação</a></li>
-          <li><a href="#acessibilidade">Acessibilidade</a></li>
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#ciencia">Ciência</a></li>
+          <li><a href="#robotica">Robótica</a></li>
+          <li><a href="#simulador">Simulador</a></li>
+          <li><a href="#impacto">Impacto</a></li>
         </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo-principal" role="main">
+    
+    <!-- HERO -->
+    <section id="inicio" class="hero" aria-labelledby="titulo-hero">
+      <div class="container">
+        <span class="tag" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white;">Roteiro 3TRI - Projeto Integrador</span>
+        <h1 id="titulo-hero">Aquecimento Sustentável:<br>Onde a Física encontra a Robótica</h1>
+        <p>Um sistema educacional, interativo e 100% acessível para monitorar e otimizar o aquecimento da piscina do CEP usando sensores de temperatura e princípios da termodinâmica.</p>
+        <a href="#simulador" class="btn btn-primario" style="background: white; color: var(--agua-secundaria);">
+          ▶ Testar o Simulador Interativo
+        </a>
       </div>
+    </section>
+
+    <!-- CIÊNCIA (TecnoCiência) -->
+    <section id="ciencia" aria-labelledby="titulo-ciencia">
+      <div class="container">
+        <h2 id="titulo-ciencia">🔬 A Ciência por Trás do Calor</h2>
+        <p>Para aquecer a água de forma sustentável, utilizamos princípios fundamentais da física moderna:</p>
+        
+        <div class="bento-grid">
+          <article class="card">
+            <h3>🌊 Ondas Eletromagnéticas</h3>
+            <p>A luz solar é uma onda eletromagnética. Quando atinge a superfície da piscina ou do coletor solar, parte é refletida e parte é <strong>absorvida</strong>, transferindo energia na forma de calor.</p>
+          </article>
+          <article class="card">
+            <h3>🔥 Radiação do Corpo Negro</h3>
+            <p>Todos os corpos emitem radiação térmica. Cores escuras (como as serpentinhas do coletor) aproximam-se de um "corpo negro", absorvendo e emitindo radiação infravermelha com máxima eficiência.</p>
+          </article>
+          <article class="card span-2">
+            <h3>⚡ Efeito Fotoelétrico (Conexão com Energia)</h3>
+            <p>Embora o aquecimento seja térmico, o <em>controle</em> do sistema usa painéis solares fotovoltaicos. Neles, fótons da luz solar colidem com elétrons em materiais semicondutores, gerando a corrente elétrica que alimenta nossos sensores e microcontroladores, fechando o ciclo da sustentabilidade.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROBÓTICA (Foco Principal do Desafio) -->
+    <section id="robotica" style="background: var(--superficie);" aria-labelledby="titulo-robotica">
+      <div class="container">
+        <h2 id="titulo-robotica">🤖 Robótica: Sensores de Temperatura</h2>
+        <p>Como medimos o aquecimento da água de forma confiável? Veja as respostas para as questões orientadoras do projeto:</p>
+
+        <div class="bento-grid">
+          <!-- Questão 1 -->
+          <article class="card">
+            <span class="tag">Transdução</span>
+            <h3>1. Do Físico ao Elétrico</h3>
+            <p>Um sensor (ex: termistor NTC ou DS18B20) é um <strong>transdutor</strong>. Ele possui um material cuja resistência elétrica muda de forma previsível com a temperatura. O microcontrolador lê essa resistência e a converte em um sinal digital (binário) via conversor Analógico-Digital (ADC).</p>
+          </article>
+
+          <!-- Questão 2 -->
+          <article class="card">
+            <span class="tag">Mapeamento</span>
+            <h3>2. Medição em Pontos Diferentes</h3>
+            <p>Usamos uma rede de sensores à prova d'água:</p>
+            <ul style="margin-top: 0.5rem; padding-left: 1.2rem;">
+              <li><strong>Sensor A:</strong> Entrada da água fria no coletor.</li>
+              <li><strong>Sensor B:</strong> Saída da água aquecida.</li>
+              <li><strong>Sensor C:</strong> Profundidade da piscina (média).</li>
+            </ul>
+          </article>
+
+          <!-- Questão 3 -->
+          <article class="card span-2">
+            <span class="tag">Metrologia</span>
+            <h3>3. Precisão vs. Resolução vs. Tempo de Resposta</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+              <div>
+                <strong style="color: var(--erro);">Precisão (±0.5°C)</strong>
+                <p style="font-size: 0.9rem;">Quão próximo o valor medido está da temperatura real absoluta.</p>
+              </div>
+              <div>
+                <strong style="color: var(--agua-primaria);">Resolução (0.1°C)</strong>
+                <p style="font-size: 0.9rem;">A menor variação que o sensor consegue detectar e exibir.</p>
+              </div>
+              <div>
+                <strong style="color: var(--sucesso);">Tempo de Resposta (2s)</strong>
+                <p style="font-size: 0.9rem;">Tempo para a leitura estabilizar após uma mudança brusca.</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Questão 4 -->
+          <article class="card span-2" style="border-left: 5px solid var(--sucesso);">
+            <span class="tag" style="background: var(--sucesso); color: white;">Validação de Dados</span>
+            <h3>4. Como os dados provam o aquecimento?</h3>
+            <p>O sistema valida o aquecimento calculando o <strong>Delta T (ΔT)</strong> em tempo real. Se <code>T_Saída - T_Entrada > 0</code> de forma consistente, e a <code>T_Piscina</code> mostra uma tendência de alta ao longo do tempo, o algoritmo confirma: "Sistema Aquecendo".</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIMULADOR INTERATIVO -->
+    <section id="simulador" aria-labelledby="titulo-simulador">
+      <div class="container">
+        <h2 id="titulo-simulador">🎮 Simulador de Sensoriamento em Tempo Real</h2>
+        <p>Ajuste a radiação solar e o fluxo de água para ver como os sensores reagem e como o sistema detecta o aquecimento.</p>
+
+        <div class="simulador-container">
+          <!-- Controles -->
+          <div class="painel-controle card">
+            <h3>Painel de Controle</h3>
+            
+            <div class="controle-grupo">
+              <label for="radiacao">Radiação Solar (Intensidade): <span id="val-radiacao" class="tag">50%</span></label>
+              <input type="range" id="radiacao" min="0" max="100" value="50" aria-describedby="desc-radiacao">
+              <small id="desc-radiacao" style="color: var(--texto-suave);">Afeta diretamente a temperatura de saída do coletor.</small>
+            </div>
+
+            <div class="controle-grupo">
+              <label for="fluxo">Fluxo de Água (Velocidade): <span id="val-fluxo" class="tag">Médio</span></label>
+              <input type="range" id="fluxo" min="1" max="3" value="2" aria-describedby="desc-fluxo">
+              <small id="desc-fluxo" style="color: var(--texto-suave);">Fluxo lento aquece mais a água, mas demora para circular.</small>
+            </div>
+
+            <div class="card" style="background: var(--fundo); border: 1px dashed var(--borda);">
+              <h4 style="font-family: var(--fonte-dados); margin-bottom: 0.5rem;">📊 Análise do Sistema:</h4>
+              <p id="analise-sistema" style="font-weight: 600; color: var(--texto-suave);">Aguardando dados dos sensores...</p>
+            </div>
+          </div>
+
+          <!-- Visualização -->
+          <div class="painel-visual" role="region" aria-label="Visualização da piscina e dados dos sensores">
+            <h3 style="color: white; margin-bottom: 1rem;">Monitoramento da Piscina</h3>
+            
+            <div class="piscina-visual" id="piscina-visual" aria-hidden="true">
+              <div class="onda"></div>
+              <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 800; font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                PISCINA
+              </div>
+            </div>
+
+            <div class="dados-sensor">
+              <div class="dado-box">
+                <div class="rotulo">Sensor A (Entrada)</div>
+                <div class="valor" id="temp-entrada">22.0°C</div>
+              </div>
+              <div class="dado-box">
+                <div class="rotulo">Sensor B (Saída)</div>
+                <div class="valor" id="temp-saida">24.5°C</div>
+              </div>
+              <div class="dado-box" style="grid-column: span 2; background: rgba(255,255,255,0.1); border: 1px solid var(--sol-secundario);">
+                <div class="rotulo">Delta T (Eficiência do Aquecimento)</div>
+                <div class="valor" id="temp-delta" style="color: white;">+2.5°C</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACESSIBILIDADE E IMPACTO -->
+    <section id="impacto" style="background: var(--superficie);" aria-labelledby="titulo-impacto">
+      <div class="container">
+        <h2 id="titulo-impacto">♿ Acessibilidade e Impacto Social</h2>
+        <p>Este projeto foi desenhado para ser inclusivo desde a primeira linha de código.</p>
+        
+        <div class="bento-grid">
+          <div class="card">
+            <h3>✅ Critérios de Inclusão Digital</h3>
+            <ul style="padding-left: 1.2rem; margin-top: 0.5rem; line-height: 1.8;">
+              <li>Navegação 100% funcional via teclado (Tab, Enter, Escape).</li>
+              <li>Contraste de cores validado (WCAG AA/AAA).</li>
+              <li>Botões flutuantes para Alto Contraste e Fonte para Dislexia.</li>
+              <li>Integração pronta para o widget do <strong>VLibras</strong>.</li>
+            </ul>
+          </div>
+          
+          <div class="card">
+            <h3>🌍 Impacto e Sustentabilidade</h3>
+            <p>A automação do aquecimento reduz o desperdício de energia em até 30%. Ao tornar essa tecnologia <strong>acessível e educacional</strong>, democratizamos o conhecimento sobre energias renováveis para a comunidade do CEP.</p>
+            
+            <!-- Placeholder para Vídeo em Libras (Critério de Avaliação) -->
+            <div class="libras-placeholder" role="img" aria-label="Espaço reservado para vídeo de interpretação em Libras explicando o projeto">
+              <div style="text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">🤟</div>
+                <strong>Vídeo em Libras</strong><br>
+                <small>Explicação do Projeto Integrador</small><br>
+                <small style="opacity: 0.7;">(Inserir embed do YouTube aqui)</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER & MAPA DO SITE -->
+  <footer role="contentinfo">
+    <div class="container footer-grid">
       <div>
-        <h4>Referências</h4>
+        <h3 style="color: var(--sol-primario);">Projeto Integrador CEP</h3>
+        <p>Desenvolvido com foco em Programação, TecnoCiência e Robótica para o 3º Trimestre.</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">
+          "A tecnologia só é verdadeiramente inovadora quando é acessível a todos."
+        </p>
+      </div>
+      
+      <div class="mapa-site">
+        <h4>Mapa do Site</h4>
         <ul>
-          <li><a href="#tema">HEWITT, P. — Física Conceitual</a></li>
-          <li><a href="#tema">TIPLER &amp; MOSCA — Física, v.2</a></li>
-          <li><a href="#tema">NEWTON, I. — Opticks (1704)</a></li>
-          <li><a href="#acessibilidade">W3C — WCAG 2.1</a></li>
-          <li><a href="#inicio">↑ Voltar ao topo</a></li>
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#ciencia">Fundamentos Científicos</a></li>
+          <li><a href="#robotica">Sensores e Robótica</a></li>
+          <li><a href="#simulador">Simulador Interativo</a></li>
+          <li><a href="#impacto">Acessibilidade e Impacto</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Recursos de Acessibilidade</h4>
+        <ul>
+          <li><a href="#" onclick="toggleContraste(); return false;">Alternar Alto Contraste</a></li>
+          <li><a href="#" onclick="toggleDislexia(); return false;">Alternar Fonte para Dislexia</a></li>
+          <li><a href="https://www.vlibras.gov.br/" target="_blank" rel="noopener">Sobre o VLibras</a></li>
         </ul>
       </div>
     </div>
-    <div class="f-note">
-      <span>© 2026 Equipe Espectro — feito à mão com HTML + CSS + JavaScript puros.</span>
-      <span>n₁·sen θ₁ = n₂·sen θ₂ ✦ λ ∈ [410, 680] nm</span>
+    <div class="container" style="text-align: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #333; font-size: 0.8rem; opacity: 0.6;">
+      &copy; 2024 Projeto Integrador CEP. Todos os direitos reservados. Código aberto para fins educacionais.
+    </div>
+  </footer>
+
+  <!-- FERRAMENTAS DE ACESSIBILIDADE FLUTUANTES -->
+  <div class="a11y-toolbar" role="region" aria-label="Ferramentas de acessibilidade">
+    <button class="a11y-btn" onclick="toggleContraste()" aria-label="Ativar ou desativar modo de alto contraste" title="Alto Contraste">
+      👁️
+    </button>
+    <button class="a11y-btn" onclick="toggleDislexia()" aria-label="Ativar ou desativar fonte para dislexia" title="Fonte para Dislexia">
+      Aa
+    </button>
+  </div>
+
+  <!-- WIDGET VLIBRAS (Padrão Gov) -->
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
     </div>
   </div>
-</footer>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
 
-<!-- ============ BARRA DE ACESSIBILIDADE ============ -->
-<button class="atb-btn" id="atbBtn" aria-expanded="false" aria-controls="atbPanel" aria-label="Abrir ferramentas de acessibilidade">A11Y</button>
-<div class="atb" id="atbPanel" role="dialog" aria-label="Ferramentas de acessibilidade" hidden>
-  <h3>Acessibilidade</h3>
-  <div class="atb-row">
-    <button class="abtn" id="fMinus" aria-label="Diminuir tamanho da fonte">A−</button>
-    <button class="abtn" id="fReset" aria-label="Restaurar tamanho de fonte padrão">A</button>
-    <button class="abtn" id="fPlus" aria-label="Aumentar tamanho da fonte">A+</button>
-  </div>
-  <div class="atb-row"><button class="abtn" id="hcBtn" aria-pressed="false">Alto contraste</button></div>
-  <div class="atb-row"><button class="abtn" id="rmBtn" aria-pressed="false">Reduzir movimento</button></div>
-  <small>Fonte: <span id="fPct">100%</span> · atalho: Tab navega por tudo</small>
-</div>
+  <!-- LÓGICA DO SITE E SIMULADOR -->
+  <script>
+    // =========================================================
+    // 1. FUNÇÕES DE ACESSIBILIDADE
+    // =========================================================
+    function toggleContraste() {
+      document.body.classList.toggle('alto-contraste');
+      const isAtivo = document.body.classList.contains('alto-contraste');
+      localStorage.setItem('altoContraste', isAtivo);
+    }
 
-<noscript><p style="padding:1rem;text-align:center;font-family:monospace;background:#c8f31d;border-bottom:3px solid #131">Ative o JavaScript para usar os instrumentos interativos — todo o conteúdo textual permanece acessível.</p></noscript>
+    function toggleDislexia() {
+      document.body.classList.toggle('fonte-dislexia');
+      const isAtivo = document.body.classList.contains('fonte-dislexia');
+      localStorage.setItem('fonteDislexia', isAtivo);
+    }
 
-<script>
-(() => {
-"use strict";
-const prefersRM = matchMedia("(prefers-reduced-motion: reduce)");
-let rmOverride = false;
-const motionOK = () => !(prefersRM.matches || rmOverride);
-const fmt = (x,d=1)=>x.toLocaleString("pt-BR",{minimumFractionDigits:d,maximumFractionDigits:d});
-/* paleta espectral para fundo claro */
-const SPEC = ["#d92d3d","#e86f13","#c99700","#148f5f","#0092b8","#3351d8","#6a0dad"];
-const INK = "#131313";
+    // Restaurar preferências ao carregar
+    window.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('altoContraste') === 'true') document.body.classList.add('alto-contraste');
+      if (localStorage.getItem('fonteDislexia') === 'true') document.body.classList.add('fonte-dislexia');
+    });
 
-/* comprimento de onda → cor */
-function wl2rgb(w){
-  let r=0,g=0,b=0;
-  if(w<440){r=-(w-440)/60;b=1} else if(w<490){g=(w-440)/50;b=1}
-  else if(w<510){g=1;b=-(w-510)/20} else if(w<580){r=(w-510)/70;g=1}
-  else if(w<645){r=1;g=-(w-645)/65} else {r=1}
-  let f=1; if(w<420)f=.35+.65*(w-400)/20; else if(w>690)f=.35+.65*(780-w)/90;
-  return [r*f,g*f,b*f].map(v=>Math.round(v*230));
-}
-const wl2css = w => { const [r,g,b]=wl2rgb(w); return `rgb(${r},${g},${b})`; };
+    // =========================================================
+    // 2. LÓGICA DO SIMULADOR INTERATIVO
+    // =========================================================
+    const sliderRadiacao = document.getElementById('radiacao');
+    const sliderFluxo = document.getElementById('fluxo');
+    const valRadiacao = document.getElementById('val-radiacao');
+    const valFluxo = document.getElementById('val-fluxo');
+    
+    const displayEntrada = document.getElementById('temp-entrada');
+    const displaySaida = document.getElementById('temp-saida');
+    const displayDelta = document.getElementById('temp-delta');
+    const analiseSistema = document.getElementById('analise-sistema');
+    const piscinaVisual = document.getElementById('piscina-visual');
 
-/* λ → frequência sonora (vermelho grave, violeta agudo) */
-const wl2freq = l => 220*Math.pow(2,(680-l)/(270)*2);
-const NOTAS=["Dó","Dó#","Ré","Ré#","Mi","Fá","Fá#","Sol","Sol#","Lá","Lá#","Si"];
-function wl2nota(l){
-  const f=wl2freq(l), n=Math.round(12*Math.log2(f/220));
-  return NOTAS[((n%12)+12)%12]+"₄";
-}
+    // Estado base
+    let tempBaseEntrada = 22.0;
+    
+    function atualizarSimulador() {
+      // Ler valores dos inputs (Acessibilidade: funcionam com teclado)
+      const radiacao = parseInt(sliderRadiacao.value);
+      const fluxo = parseInt(sliderFluxo.value);
 
-/* ---------- progresso ---------- */
-const progV=document.getElementById("progV"), progT=document.getElementById("progT");
-addEventListener("scroll",()=>{
-  const h=document.documentElement, p=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;
-  progV.style.height=p+"%"; progT.style.width=p+"%";
-},{passive:true});
+      // Atualizar labels
+      valRadiacao.textContent = radiacao + '%';
+      const textosFluxo = ['Lento', 'Médio', 'Rápido'];
+      valFluxo.textContent = textosFluxo[fluxo - 1];
 
-/* ---------- menu ---------- */
-const menuBtn=document.getElementById("menuBtn"), mclose=document.getElementById("mclose");
-const setNav=o=>{document.body.classList.toggle("nav-open",o);menuBtn.setAttribute("aria-expanded",o);};
-menuBtn.addEventListener("click",()=>setNav(true));
-mclose.addEventListener("click",()=>setNav(false));
-document.querySelectorAll(".mnav a").forEach(a=>a.addEventListener("click",()=>setNav(false)));
-addEventListener("keydown",e=>{if(e.key==="Escape")setNav(false);});
+      // Lógica Física Simplificada do Simulador
+      // Quanto maior a radiação, mais quente a saída.
+      // Quanto menor o fluxo (1), mais tempo a água fica no coletor, logo, mais quente ela fica.
+      const fatorAquecimento = (radiacao / 10) * (4 - fluxo); 
+      const tempSaidaCalculada = tempBaseEntrada + fatorAquecimento + (Math.random() * 0.2); // + ruído do sensor (realismo)
+      const deltaT = tempSaidaCalculada - tempBaseEntrada;
 
-/* ---------- scrollspy ---------- */
-const sLinks=[...document.querySelectorAll(".snav a")];
-const spy=new IntersectionObserver(es=>es.forEach(e=>{
-  if(e.isIntersecting){ sLinks.forEach(l=>l.removeAttribute("aria-current"));
-    const l=sLinks.find(l=>l.getAttribute("href")==="#"+e.target.id); if(l)l.setAttribute("aria-current","true"); }
-}),{rootMargin:"-40% 0px -55% 0px"});
-["tema","bancada","dispositivo","aplicacao","acessibilidade","impacto","equipe"].forEach(id=>{const s=document.getElementById(id);if(s)spy.observe(s);});
+      // Atualizar DOM com 1 casa decimal (Resolução de 0.1°C)
+      displayEntrada.textContent = tempBaseEntrada.toFixed(1) + '°C';
+      displaySaida.textContent = tempSaidaCalculada.toFixed(1) + '°C';
+      displayDelta.textContent = (deltaT > 0 ? '+' : '') + deltaT.toFixed(1) + '°C';
 
-/* ---------- scramble ---------- */
-const GL="ΔλθνπΣΦΨΩ≅∴◊·/01▚▞";
-function scramble(el){
-  const txt=el.dataset.text||el.textContent; el.dataset.text=txt;
-  if(!motionOK()){el.textContent=txt;return;}
-  let f=0; const total=txt.length*2.4+8;
-  const iv=setInterval(()=>{
-    f++;
-    el.textContent=txt.split("").map((c,i)=>c===" "?" ":(i<f/2.2?c:GL[(Math.random()*GL.length)|0])).join("");
-    if(f>total){el.textContent=txt;clearInterval(iv);}
-  },30);
-}
-
-/* ---------- contadores ---------- */
-function count(el){
-  const t=parseFloat(el.dataset.count), pre=el.dataset.prefix||"", suf=el.dataset.suffix||"";
-  if(!motionOK()){el.textContent=pre+t.toLocaleString("pt-BR")+suf;return;}
-  const t0=performance.now(), dur=1300;
-  const step=n=>{const p=Math.min(1,(n-t0)/dur),e=1-Math.pow(1-p,3);
-    el.textContent=pre+Math.round(t*e).toLocaleString("pt-BR")+suf;
-    if(p<1)requestAnimationFrame(step);};
-  requestAnimationFrame(step);
-}
-
-/* ---------- reveals ---------- */
-const io=new IntersectionObserver(es=>es.forEach(e=>{
-  if(!e.isIntersecting)return; const el=e.target;
-  if(el.classList.contains("rv")||el.classList.contains("lm"))el.classList.add("in");
-  if(el.hasAttribute("data-scramble"))scramble(el);
-  if(el.hasAttribute("data-count"))count(el);
-  io.unobserve(el);
-}),{threshold:.18});
-document.querySelectorAll(".rv,.lm,[data-scramble],[data-count]").forEach(el=>io.observe(el));
-
-/* ---------- HERO: prisma ---------- */
-const hc=document.getElementById("prism");
-if(hc){
-  const ctx=hc.getContext("2d"); let W,H,my=0,myT=0;
-  const size=()=>{const d=devicePixelRatio||1;W=hc.clientWidth;H=hc.clientHeight;hc.width=W*d;hc.height=H*d;ctx.setTransform(d,0,0,d,0,0);};
-  size(); addEventListener("resize",()=>{size();draw(0);});
-  hc.addEventListener("pointermove",e=>{const r=hc.getBoundingClientRect();myT=((e.clientY-r.top)/H-.5)*60;});
-  function draw(t){
-    ctx.clearRect(0,0,W,H);
-    const cx=W*.44, cy=H*.5, s=Math.min(W,H)*.19;
-    const T=[cx,cy-s], A=[cx-s,cy+s*.68], B=[cx+s,cy+s*.68];
-    const f=.46, P1=[T[0]+(A[0]-T[0])*f, T[1]+(A[1]-T[1])*f+my*.3];
-    const P2=[T[0]+(B[0]-T[0])*.52, T[1]+(B[1]-T[1])*.52+my*.2];
-    /* prisma */
-    ctx.beginPath();ctx.moveTo(...T);ctx.lineTo(...A);ctx.lineTo(...B);ctx.closePath();
-    ctx.fillStyle="rgba(0,194,224,.07)";ctx.fill();
-    ctx.strokeStyle=INK;ctx.lineWidth=3;ctx.lineJoin="round";ctx.stroke();
-    /* feixe branco (tinta) */
-    const src=[-20,P1.y-(H*.05)+my];
-    ctx.strokeStyle=INK;ctx.lineWidth=5;ctx.lineCap="round";
-    ctx.beginPath();ctx.moveTo(...src);ctx.lineTo(...P1);ctx.stroke();
-    ctx.strokeStyle="rgba(19,19,19,.3)";ctx.lineWidth=3;
-    ctx.beginPath();ctx.moveTo(...P1);ctx.lineTo(...P2);ctx.stroke();
-    /* raios coloridos */
-    const base=Math.atan2(.05*H,W*.42)+my*.002;
-    SPEC.forEach((c,i)=>{
-      const ang=base+(i-3)*(0.05+Math.abs(my)*0.0004);
-      const ex=P2[0]+Math.cos(ang)*W, ey=P2[1]+Math.sin(ang)*W;
-      ctx.strokeStyle=c;ctx.lineWidth=3.4;
-      ctx.beginPath();ctx.moveTo(...P2);ctx.lineTo(ex,ey);ctx.stroke();
-      if(motionOK()){
-        for(let k=0;k<3;k++){
-          const p=((t*0.00012*(1+i*.06))+k/3+i*.13)%1;
-          ctx.fillStyle=c;ctx.beginPath();
-          ctx.arc(P2[0]+(ex-P2[0])*p,P2[1]+(ey-P2[1])*p,3,0,7);ctx.fill();
-        }
+      // Lógica de Análise (Responde à pergunta: "Como os dados indicam aquecimento?")
+      if (deltaT > 3.0) {
+        analiseSistema.textContent = "✅ SISTEMA AQUECENDO EFICIENTEMENTE. Delta T alto indica boa absorção de radiação.";
+        analiseSistema.style.color = "var(--sucesso)";
+        piscinaVisual.style.background = `rgba(255, 140, 66, ${0.2 + (deltaT/10)})`; // Muda cor para laranja
+      } else if (deltaT > 0.5) {
+        analiseSistema.textContent = "⚠️ AQUECIMENTO LENTO. Verifique se o fluxo não está muito rápido ou a radiação baixa.";
+        analiseSistema.style.color = "var(--sol-primario)";
+        piscinaVisual.style.background = `rgba(0, 180, 216, ${0.2 + (deltaT/10)})`;
+      } else {
+        analiseSistema.textContent = "❌ SEM AQUECIMENTO SIGNIFICATIVO. Delta T muito baixo.";
+        analiseSistema.style.color = "var(--erro)";
+        piscinaVisual.style.background = "rgba(0, 119, 182, 0.3)";
       }
+    }
+
+    // Event Listeners (Funcionam com mouse e teclado)
+    sliderRadiacao.addEventListener('input', atualizarSimulador);
+    sliderFluxo.addEventListener('input', atualizarSimulador);
+
+    // Inicializar
+    atualizarSimulador();
+
+    // =========================================================
+    // 3. ANIMAÇÃO DE SCROLL (Interatividade Visual)
+    // =========================================================
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = 1;
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.card').forEach(card => {
+      card.style.opacity = 0;
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(card);
     });
-    /* anotações de desenho técnico */
-    ctx.font="700 11px JetBrains Mono, monospace";ctx.fillStyle=INK;
-    ctx.fillText("LUZ BRANCA",src[0]+30,src[1]-14);
-    ctx.fillText("ESPECTRO VISÍVEL →",P2[0]+40,P2[1]-s*.9);
-    ctx.strokeStyle="rgba(19,19,19,.5)";ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(src[0]+28,src[1]-10);ctx.lineTo(src[0]+70,src[1]-2);ctx.stroke();
-  }
-  function loop(t){my+=(myT-my)*.06;draw(t);if(motionOK())requestAnimationFrame(loop);}
-  if(motionOK())requestAnimationFrame(loop);else draw(0);
-}
 
-/* ---------- REFRAÇÃO ---------- */
-const rc=document.getElementById("refrCanvas");
-if(rc){
-  const x=rc.getContext("2d");
-  const inc=document.getElementById("incAngle"),incVal=document.getElementById("incVal"),amp=document.getElementById("ampDisp");
-  let nBase=1.52,mName="Vidro crown";
-  const size=()=>{const d=devicePixelRatio||1;rc.width=rc.clientWidth*d;rc.height=430*d;x.setTransform(d,0,0,d,0,0);};
-  const nAt=l=>nBase+0.0042/(l*l);
-  function draw(){
-    size();
-    const w=rc.clientWidth,h=430,X=w*.5,y0=h*.52,L=Math.min(w,h)*.62,th1=+inc.value*Math.PI/180;
-    x.clearRect(0,0,w,h);
-    x.fillStyle="rgba(51,81,216,.045)";x.fillRect(0,0,w,y0);
-    x.fillStyle="rgba(0,146,184,.07)";x.fillRect(0,y0,w,h-y0);
-    x.strokeStyle=INK;x.lineWidth=2.5;x.beginPath();x.moveTo(0,y0);x.lineTo(w,y0);x.stroke();
-    x.setLineDash([5,7]);x.strokeStyle="rgba(19,19,19,.4)";x.lineWidth=1.5;
-    x.beginPath();x.moveTo(X,20);x.lineTo(X,h-20);x.stroke();x.setLineDash([]);
-    const sx=X-L*Math.sin(th1),sy=y0-L*Math.cos(th1);
-    x.strokeStyle=INK;x.lineWidth=4;x.beginPath();x.moveTo(sx,sy);x.lineTo(X,y0);x.stroke();
-    x.strokeStyle="rgba(19,19,19,.18)";x.lineWidth=2;
-    x.beginPath();x.moveTo(X,y0);x.lineTo(X+L*Math.sin(th1),y0-L*Math.cos(th1));x.stroke();
-    const nr=nAt(.65),nv=nAt(.41);
-    const t2r=Math.asin(Math.sin(th1)/nr),t2v=Math.asin(Math.sin(th1)/nv);
-    const t2c=(t2r+t2v)/2,delta=t2v-t2r,dDraw=amp.checked?Math.max(delta*40,.07):delta;
-    for(let i=0;i<7;i++){
-      const t=t2c+(i/6-.5)*dDraw;
-      x.strokeStyle=SPEC[i];x.lineWidth=3;
-      x.beginPath();x.moveTo(X,y0);x.lineTo(X+L*Math.sin(t),y0+L*Math.cos(t));x.stroke();
-    }
-    x.strokeStyle="#ff3366";x.lineWidth=1.6;x.beginPath();x.arc(X,y0,58,-Math.PI/2,-Math.PI/2-th1,true);x.stroke();
-    x.strokeStyle="#3351d8";x.beginPath();x.arc(X,y0,58,Math.PI/2,Math.PI/2-t2c,true);x.stroke();
-    x.font="700 12px JetBrains Mono, monospace";x.fillStyle=INK;
-    x.fillText("AR · n₁ = 1,000",18,30);
-    x.fillText(mName.toUpperCase()+" · n ≈ "+fmt(nBase,3),18,h-18);
-    x.fillStyle="#ff3366";x.fillText("θ₁ = "+inc.value+"°",X+10,44);
-    x.fillStyle="#3351d8";x.fillText("θ₂ ≈ "+fmt(t2c*180/Math.PI,1)+"°",X+10,h-42);
-    if(amp.checked){
-      x.fillStyle=SPEC[0];x.fillText("650 nm",X+L*Math.sin(t2c-dDraw/2)+8,y0+L*Math.cos(t2c-dDraw/2));
-      x.fillStyle=SPEC[6];x.fillText("410 nm",X+L*Math.sin(t2c+dDraw/2)+8,y0+L*Math.cos(t2c+dDraw/2));
-    }
-    rRed.textContent=fmt(t2r*180/Math.PI,2)+"°"; rVio.textContent=fmt(t2v*180/Math.PI,2)+"°";
-    rDelta.textContent=fmt(delta*180/Math.PI,3)+"°"; rNr.textContent=fmt(nr,4); rNv.textContent=fmt(nv,4);
-    incVal.textContent=inc.value+"°";
-  }
-  inc.addEventListener("input",draw); amp.addEventListener("change",draw);
-  document.querySelectorAll("[data-n]").forEach(b=>b.addEventListener("click",()=>{
-    document.querySelectorAll("[data-n]").forEach(q=>q.setAttribute("aria-pressed","false"));
-    b.setAttribute("aria-pressed","true"); nBase=+b.dataset.n; mName=b.dataset.name; draw();
-  }));
-  addEventListener("resize",draw); draw();
-}
-
-/* ---------- DISCO DE NEWTON ---------- */
-const dc=document.getElementById("diskC");
-if(dc){
-  const c2=dc.getContext("2d"),rpmEl=document.getElementById("rpm"),rpmVal=document.getElementById("rpmVal");
-  const sw=document.getElementById("percSwatch"),pt=document.getElementById("percTxt");
-  let rot=0,last=performance.now(),rpm=+rpmEl.value;
-  function paint(){
-    c2.clearRect(0,0,300,300);
-    for(let i=0;i<7;i++){
-      c2.beginPath();c2.moveTo(150,150);
-      c2.arc(150,150,138,rot+i*2*Math.PI/7,rot+(i+1)*2*Math.PI/7);
-      c2.closePath();c2.fillStyle=SPEC[i];c2.fill();
-      c2.strokeStyle="#fffdf8";c2.lineWidth=1;c2.stroke();
-    }
-    c2.beginPath();c2.arc(150,150,138,0,7);c2.strokeStyle=INK;c2.lineWidth=3;c2.stroke();
-    c2.beginPath();c2.arc(150,150,24,0,7);c2.fillStyle="#fffdf8";c2.fill();c2.strokeStyle=INK;c2.lineWidth=3;c2.stroke();
-  }
-  function upd(){
-    rpmVal.textContent=rpm+" rpm";
-    const fast=rpm>=90;
-    sw.style.background=fast?"#f4f2ec":"conic-gradient("+SPEC.concat(SPEC[0]).join(",")+")";
-    pt.textContent=fast?"Percepção: branco por síntese aditiva.":"Percepção: sete cores distinguíveis.";
-  }
-  function loop(t){
-    const dt=(t-last)/1000;last=t;
-    if(motionOK()&&rpm>0)rot+=rpm/60*2*Math.PI*dt;
-    paint();requestAnimationFrame(loop);
-  }
-  rpmEl.addEventListener("input",()=>{rpm=+rpmEl.value;upd();if(!motionOK())paint();
-    document.querySelectorAll("[data-rpm]").forEach(q=>q.setAttribute("aria-pressed",+q.dataset.rpm===rpm));});
-  document.querySelectorAll("[data-rpm]").forEach(b=>b.addEventListener("click",()=>{
-    rpm=+b.dataset.rpm;rpmEl.value=rpm;upd();
-    document.querySelectorAll("[data-rpm]").forEach(q=>q.setAttribute("aria-pressed","false"));
-    b.setAttribute("aria-pressed","true");if(!motionOK())paint();
-  }));
-  upd();paint();requestAnimationFrame(loop);
-}
-
-/* ---------- ANALISADOR ESPECTRAL ---------- */
-const an=document.getElementById("anCanvas");
-if(an){
-  const c3=an.getContext("2d"), N=24, wl=Array.from({length:N},(_,i)=>410+i*(270/(N-1)));
-  const SRC={
-    sol:l=>.45+.55*Math.exp(-((l-555)**2)/(2*85**2)),
-    inc:l=>.16+.82*((l-410)/270),
-    led:l=>Math.min(1,.95*Math.exp(-((l-452)**2)/(2*16**2))+.8*Math.exp(-((l-578)**2)/(2*52**2))),
-    flu:l=>Math.min(1,.16+.85*Math.exp(-((l-436)**2)/(2*7**2))+.7*Math.exp(-((l-546)**2)/(2*7**2))+.6*Math.exp(-((l-579)**2)/(2*7**2))+.3*Math.exp(-((l-612)**2)/(2*18**2)))
-  };
-  let src="sol", sweep=0, lastT=performance.now(), playing=motionOK(), activeIdx=-1;
-  const size=()=>{const d=devicePixelRatio||1;an.width=an.clientWidth*d;an.height=330*d;c3.setTransform(d,0,0,d,0,0);};
-  function draw(t){
-    size();
-    const w=an.clientWidth,h=330,padL=36,padR=16,padT=20,padB=44;
-    const slot=(w-padL-padR)/N, bw=slot*.62, y0=h-padB;
-    c3.clearRect(0,0,w,h);
-    /* eixo */
-    c3.strokeStyle=INK;c3.lineWidth=2.5;c3.beginPath();c3.moveTo(padL-6,y0);c3.lineTo(w-padR+6,y0);c3.stroke();
-    c3.font="600 10px JetBrains Mono, monospace";c3.fillStyle="#625e54";
-    [410,480,550,620,680].forEach(v=>{
-      const xx=padL+((v-410)/270)*(w-padL-padR);
-      c3.fillText(v,xx-10,h-14);
-      c3.strokeStyle="rgba(19,19,19,.25)";c3.lineWidth=1;c3.beginPath();c3.moveTo(xx,y0);c3.lineTo(xx,y0+6);c3.stroke();
-    });
-    c3.fillText("λ (nm)",w/2-18,h-2);
-    const pos=(sweep%4200)/4200*N;
-    for(let i=0;i<N;i++){
-      const val=SRC[src](wl[i])*(0.92+0.08*Math.sin(t*0.003+i*1.7));
-      const full=val*(h-padT-padB);
-      const hh = i<Math.floor(pos)?full : (i===Math.floor(pos)?full*(pos%1):4);
-      c3.fillStyle=wl2css(wl[i]);
-      c3.fillRect(padL+i*slot+(slot-bw)/2,y0-hh,bw,hh);
-      c3.strokeStyle=INK;c3.lineWidth=1.6;
-      c3.strokeRect(padL+i*slot+(slot-bw)/2,y0-hh,bw,hh);
-      if(i===activeIdx){c3.strokeStyle="#ff3366";c3.lineWidth=3.5;c3.strokeRect(padL+i*slot+(slot-bw)/2-3,y0-hh-3,bw+6,hh+6);}
-    }
-    /* linha de varredura */
-    const lx=padL+(pos/N)*(w-padL-padR);
-    c3.setLineDash([6,6]);c3.strokeStyle="#ff3366";c3.lineWidth=2.5;
-    c3.beginPath();c3.moveTo(lx,padT-6);c3.lineTo(lx,y0);c3.stroke();c3.setLineDash([]);
-    /* leitura */
-    const iNow=Math.min(N-1,Math.floor(pos)), λ=wl[iNow];
-    anRead.textContent="λ ≈ "+Math.round(λ)+" nm · intensidade "+fmt(SRC[src](λ),2)+" · nota "+wl2nota(λ);
-    tPos.textContent=iNow+1; tWl.textContent=Math.round(λ);
-    tInt.textContent=fmt(SRC[src](λ),2); tNota.textContent=wl2nota(λ);
-  }
-  function loop(t){
-    const dt=t-lastT;lastT=t;
-    if(playing&&motionOK())sweep+=dt;
-    draw(t);requestAnimationFrame(loop);
-  }
-  anPlay.addEventListener("click",()=>{
-    playing=!playing;
-    anPlay.setAttribute("aria-pressed",playing);
-    anPlay.textContent=playing?"⏸ Pausar varredura":"▶ Retomar varredura";
-  });
-  document.querySelectorAll("[data-src]").forEach(b=>b.addEventListener("click",()=>{
-    document.querySelectorAll("[data-src]").forEach(q=>q.setAttribute("aria-pressed","false"));
-    b.setAttribute("aria-pressed","true");src=b.dataset.src;sweep=0;
-  }));
-  requestAnimationFrame(loop);
-}
-
-/* ---------- SONIFICAÇÃO ---------- */
-let audio=null,sweeping=false;
-function beep(freq,dur=0.15){
-  try{
-    if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();
-    if(audio.state==="suspended")audio.resume();
-    const o=audio.createOscillator(),g=audio.createGain(),t0=audio.currentTime;
-    o.type="sine";o.frequency.value=freq;
-    g.gain.setValueAtTime(.0001,t0);
-    g.gain.exponentialRampToValueAtTime(.28,t0+.02);
-    g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
-    o.connect(g).connect(audio.destination);o.start(t0);o.stop(t0+dur+.05);
-  }catch(e){}
-}
-document.querySelectorAll(".key").forEach(k=>k.addEventListener("click",()=>beep(wl2freq(+k.dataset.wl))));
-const btnListen=document.getElementById("btnListen");
-if(btnListen){
-  btnListen.addEventListener("click",()=>{
-    if(sweeping){sweeping=false;btnListen.textContent="▶ Ouvir o espectro completo";return;}
-    sweeping=true;btnListen.textContent="⏹ Parar";
-    const wls=[650,610,580,530,490,450,415];let i=0;
-    const step=()=>{
-      if(!sweeping)return;
-      if(i>=wls.length){sweeping=false;btnListen.textContent="▶ Ouvir o espectro completo";return;}
-      beep(wl2freq(wls[i]),.22);i++;setTimeout(step,260);
-    };
-    step();
-  });
-}
-
-/* ---------- ACESSIBILIDADE ---------- */
-const atbBtn=document.getElementById("atbBtn"),atbPanel=document.getElementById("atbPanel");
-const setPanel=o=>{atbPanel.hidden=!o;atbBtn.setAttribute("aria-expanded",o);};
-atbBtn.addEventListener("click",()=>setPanel(atbPanel.hidden));
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!atbPanel.hidden)setPanel(false);});
-let fs=100;const fPct=document.getElementById("fPct");
-const setFs=v=>{fs=Math.min(140,Math.max(80,v));document.documentElement.style.fontSize=(16*fs/100)+"px";fPct.textContent=fs+"%";};
-fPlus.addEventListener("click",()=>setFs(fs+10));
-fMinus.addEventListener("click",()=>setFs(fs-10));
-fReset.addEventListener("click",()=>setFs(100));
-hcBtn.addEventListener("click",()=>{const on=document.body.classList.toggle("hc");hcBtn.setAttribute("aria-pressed",on);});
-rmBtn.addEventListener("click",()=>{rmOverride=!rmOverride;document.body.classList.toggle("rm",rmOverride);rmBtn.setAttribute("aria-pressed",rmOverride);});
-})();
-</script>
+  </script>
 </body>
 </html>
